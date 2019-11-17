@@ -21,86 +21,78 @@
     </head>
 
     <body>
-        <div id="left-column" class="flex-column">
-            <div class="flex-content">
-                <div id="editNumLayout">
-                    <input id="editNumInputLayout" type="number">
+        <div class="flex-content">
+            <div id="editNumLayout">
+                <input id="editNumInputLayout" type="number">
+            </div>
+            <div id="editNum" style="display:none">
+                <input id="editNumInput" type="number" style="width:5rem">
+            </div>
+            <div id="drawingContainer" class="container-fluid">
+                <div id="drawingHeader" style="padding-top:1rem;text-align:center;font-size:1.5rem">
+                    <div id="bikeName" class="text-center" style="border: 1px solid;border-color:transparent"></div>
+                    <input id="editBikeNameInput" class="text-center center-block" style="display:none">
                 </div>
-                <div id="editNum" style="display:none">
-                    <input id="editNumInput" type="number" style="width:5rem">
+                <div id="svgContainer">
+                    <svg id="bike" width="100%"></svg>
                 </div>
-                <div id="drawingContainer" class="container-fluid">
-                    <div id="drawingHeader" style="padding-top:1rem;text-align:center;font-size:1.5rem">
-                        <div id="bikeName" class="text-center" style="border: 1px solid;border-color:transparent"></div>
-                        <input id="editBikeNameInput" class="text-center center-block" style="display:none">
-                    </div>
-                    <div id="svgContainer">
-                        <svg id="bike" width="100%"></svg>
-                    </div>
-                    <div id="drawingFooter" style="height:3rem">
-                        <div id="measInfo"></div>
-                    </div>
+                <div id="drawingFooter" style="height:3rem">
+                    <div id="measInfo"></div>
                 </div>
-                <div class="container" id="buttonContainer" style="display:none">
-                    <div style="margin: 0 auto; text-align: left; display: inline-block">
-                        <button type="button" class="btn btn-danger" id="btnMeasXY">Measure</button>
-                        <button type="button" class="btn btn-success" id="btnMeasFrame">Frame Geometry</button>
-                        <button type="button" class="btn btn-danger" id="btnMeasComp">Components</button>
-                        <button type="button" class="btn btn-danger" id="btnMeasFit">Bike Fit</button>
-                        <button type="button" class="btn btn-danger" id="btnMeasQuick">Quick Fit</button>
-                        <button type="button" class="btn btn-danger" id="btnMeasDelta">Fit Delta</button>
-                        <button type="button" class="btn btn-danger" id="btnExtraMeasurements">Extra</button>
+            </div>
+            <div class="container" id="buttonContainer" style="display:none">
+                <div style="margin: 0 auto; text-align: left; display: inline-block">
+                    <button type="button" class="btn btn-danger" id="btnMeasXY">Measure</button>
+                    <button type="button" class="btn btn-success" id="btnMeasFrame">Frame Geometry</button>
+                    <button type="button" class="btn btn-danger" id="btnMeasComp">Components</button>
+                    <button type="button" class="btn btn-danger" id="btnMeasFit">Bike Fit</button>
+                    <button type="button" class="btn btn-danger" id="btnMeasQuick">Quick Fit</button>
+                    <button type="button" class="btn btn-danger" id="btnMeasDelta">Fit Delta</button>
+                    <button type="button" class="btn btn-danger" id="btnExtraMeasurements">Extra</button>
 
-                        <br/>
+                    <div style="display:inline-block">
+                        <button type="button" class="btn btn-primary dropdown-toggle" id="btnForkMode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="fixedAngle">Fork: Fixed Angle</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-textValue="Fork: Fixed Angle" data-ddValue="fixedAngle">Fork edits: keep fixed head tube angle</a>
+                            <a class="dropdown-item" data-textValue="Fork: Rotate Frame" data-ddValue="rotateFrame">Fork edits: allow frame rotation</a>
+                        </div>
+                    </div>
+                    <div style="display:inline-block">
+                        <button type="button" class="btn btn-primary dropdown-toggle" id="btnHeadTubeMode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="fixedTop">Head Tube: Fixed Top</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-textValue="Head Tube: Fixed Top" data-ddValue="fixedTop">Head tube edits: keeps top position fixed</a>
+                            <a class="dropdown-item" data-textValue="Head Tube: Fixed Bottom" data-ddValue="fixedBottom">Head tube edits: keeps bottom position fixed</a>
+                        </div>
+                    </div>
+                    <div style="display:inline-block">
+                        <button type="button" class="btn btn-primary dropdown-toggle" id="btnShadowAnchor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="bottomBracket">Anchor: Bottom Bracket</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-textValue="Anchor: Bottom Bracket" data-ddValue="bottomBracket">Shadow bike anchor: bottom bracket</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Saddle Top" data-ddValue="saddleTop">Shadow bike anchor: saddle top</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Hoods Top" data-ddValue="hoodsTop">Shadow bike anchor: hoods top</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Stem Front" data-ddValue="stemFront">Shadow bike anchor: stem front</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Ground" data-ddValue="ground">Shadow bike anchor: ground</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Front Hub" data-ddValue="frontHub">Shadow bike anchor: front hub</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Back Hub" data-ddValue="backHub">Shadow bike anchor: back hub</a>
+                        </div>
+                    </div>
 
-                        <div style="display:inline-block">
-                            <button type="button" class="btn btn-primary dropdown-toggle" id="btnForkMode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="fixedAngle">Fork: Fixed Angle</button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" data-textValue="Fork: Fixed Angle" data-ddValue="fixedAngle">Fork edits: keep fixed head tube angle</a>
-                                <a class="dropdown-item" data-textValue="Fork: Rotate Frame" data-ddValue="rotateFrame">Fork edits: allow frame rotation</a>
-                            </div>
+                    <button type="button" class="btn btn-danger" id="btnShadowBike">Shadow Bike</button>
+                    <button type="button" class="btn btn-primary" id="btnSwapBikes">Swap Bikes</button>
+                    <button type="button" class="btn btn-primary" id="btnUndo">Undo</button>
+                    <div style="display:inline-block">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export | Import</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="modal" data-target="#exportModal">Export/import/edit measurements as text</a>
+                            <a class="dropdown-item" data-toggle="modal" data-target="#importUrlModal">Import measurements from URL</a>
                         </div>
-                        <div style="display:inline-block">
-                            <button type="button" class="btn btn-primary dropdown-toggle" id="btnHeadTubeMode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="fixedTop">Head Tube: Fixed Top</button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" data-textValue="Head Tube: Fixed Top" data-ddValue="fixedTop">Head tube edits: keeps top position fixed</a>
-                                <a class="dropdown-item" data-textValue="Head Tube: Fixed Bottom" data-ddValue="fixedBottom">Head tube edits: keeps bottom position fixed</a>
-                            </div>
+                    </div>
+                    <div style="display:inline-block">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reset</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="modal" data-target="#resetModal">Reset all measurements</a>
+                            <a class="dropdown-item" data-toggle="modal" data-target="#removeShadowModal">Remove shadow bike</a>
                         </div>
-                        <div style="display:inline-block">
-                            <button type="button" class="btn btn-primary dropdown-toggle" id="btnShadowAnchor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="bottomBracket">Anchor: Bottom Bracket</button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" data-textValue="Anchor: Bottom Bracket" data-ddValue="bottomBracket">Shadow bike anchor: bottom bracket</a>
-                                <a class="dropdown-item" data-textValue="Anchor: Saddle Top" data-ddValue="saddleTop">Shadow bike anchor: saddle top</a>
-                                <a class="dropdown-item" data-textValue="Anchor: Hoods Top" data-ddValue="hoodsTop">Shadow bike anchor: hoods top</a>
-                                <a class="dropdown-item" data-textValue="Anchor: Stem Front" data-ddValue="stemFront">Shadow bike anchor: stem front</a>
-                                <a class="dropdown-item" data-textValue="Anchor: Ground" data-ddValue="ground">Shadow bike anchor: ground</a>
-                                <a class="dropdown-item" data-textValue="Anchor: Front Hub" data-ddValue="frontHub">Shadow bike anchor: front hub</a>
-                                <a class="dropdown-item" data-textValue="Anchor: Back Hub" data-ddValue="backHub">Shadow bike anchor: back hub</a>
-                            </div>
-                        </div>
-
-                        <br/>
-
-                        <button type="button" class="btn btn-danger" id="btnShadowBike">Shadow Bike</button>
-                        <button type="button" class="btn btn-primary" id="btnSwapBikes">Swap Bikes</button>
-                        <button type="button" class="btn btn-primary" id="btnUndo">Undo</button>
-                        <div style="display:inline-block">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export | Import</button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" data-toggle="modal" data-target="#exportModal">Export/import/edit measurements as text</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#importUrlModal">Import measurements from URL</a>
-                            </div>
-                        </div>
-                        <div style="display:inline-block">
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reset</button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" data-toggle="modal" data-target="#resetModal">Reset all measurements</a>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#removeShadowModal">Remove shadow bike</a>
-                            </div>
-                        </div>
-                        <button type="button" class="btn btn-danger" id="btnFullscreen">Fullscreen</button>
-                        <button type="button" class="btn btn-danger" id="btnHelp">Help</button>
                     </div>
                 </div>
             </div>
