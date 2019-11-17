@@ -1704,12 +1704,12 @@
 	s.line(d.stemBackX+xd, d.stemBackY+yd, d.stemFrontX+xd, d.stemFrontY+yd).attr(frameAttr);
 	s.ellipse(d.stemFrontX+xd, d.stemFrontY+yd, b.handlebarDiameter * 0.5, b.handlebarDiameter * 0.5).attr(frameAttr).attr({'fill': 'none'});
 
-	tx = d.hoodsTopX+xd - 65.3;
-	ty = d.hoodsTopY+yd + 3.1;
-	var lever = s.path("m " + tx + "," + ty + svgSpriteLever).attr(thinAttr).attr({'fill':'none'});
+	//tx = d.hoodsTopX+xd - 65.3;
+	//ty = d.hoodsTopY+yd + 3.1;
+	//var lever = s.path("m " + tx + "," + ty + svgSpriteLever).attr(thinAttr).attr({'fill':'none'});
 
-	s.line(d.stemFrontX+xd, d.stemFrontY+yd-0.5*b.handlebarDiameter, d.hoodsTopX+xd, d.hoodsTopY+yd).attr(thinAttr);
-	s.ellipse(d.hoodsTopX+xd, d.hoodsTopY+yd, 5, 5).attr(pointAttr);
+	//s.line(d.stemFrontX+xd, d.stemFrontY+yd-0.5*b.handlebarDiameter, d.hoodsTopX+xd, d.hoodsTopY+yd).attr(thinAttr);
+	//s.ellipse(d.hoodsTopX+xd, d.hoodsTopY+yd, 5, 5).attr(pointAttr);
 
 	// saddle
 	s.line(d.saddleBackX+xd, d.saddleBackY+yd, d.saddleFrontX+xd, d.saddleFrontY+yd).attr(frameAttr);
@@ -1808,12 +1808,12 @@
 	s.ellipse(d.stemFrontX, d.stemFrontY, b.handlebarDiameter * 0.5, b.handlebarDiameter * 0.5).attr({stroke: '#00a', 'stroke-width': sw, 'fill': '#fff', 'fill-opacity': 1});
 	s.line(d.stemBackX, d.stemBackY, d.stemFrontX, d.stemFrontY).attr({'stroke': '#00a', 'stroke-width': sw });
 
-	tx = d.hoodsTopX - 65.3;
-	ty = d.hoodsTopY + 3.1;
-	var lever = s.path("m " + tx + "," + ty + svgSpriteLever).attr({stroke: 'none', 'fill': '#ddd'});
+	//tx = d.hoodsTopX - 65.3;
+	//ty = d.hoodsTopY + 3.1;
+	//var lever = s.path("m " + tx + "," + ty + svgSpriteLever).attr({stroke: 'none', 'fill': '#ddd'});
 
-	s.line(d.stemFrontX, d.stemFrontY-0.5*b.handlebarDiameter, d.hoodsTopX, d.hoodsTopY).attr({'stroke': '#66e', 'stroke-width': sw, 'stroke-dasharray': '7, 7' });
-	s.ellipse(d.hoodsTopX, d.hoodsTopY, 5, 5).attr({stroke: '#00a', 'stroke-width': sw, 'fill': 'none'});
+	//s.line(d.stemFrontX, d.stemFrontY-0.5*b.handlebarDiameter, d.hoodsTopX, d.hoodsTopY).attr({'stroke': '#66e', 'stroke-width': sw, 'stroke-dasharray': '7, 7' });
+	//s.ellipse(d.hoodsTopX, d.hoodsTopY, 5, 5).attr({stroke: '#00a', 'stroke-width': sw, 'fill': 'none'});
 
 	// saddle
 	s.polygon(d.saddleBackX, d.saddleBackY, d.saddleBackX-20*d.sinSAngle, d.saddleBackY+20*d.cosSAngle, d.saddleFrontX-5*d.sinSAngle, d.saddleFrontY+5*d.cosSAngle, d.saddleFrontX, d.saddleFrontY).attr({'stroke': 'none', 'fill': '#bbf' });
@@ -1894,8 +1894,8 @@
 	measLine('saddleTopY', s, d.saddleCX, d.saddleCY, d.saddleCX, floorY, true, 0);
 	measLine('saddleBackX', s, d.saddleBackX, d.saddleBackY, wallX, d.saddleBackY, true, 50);
 
-	measLine('hoodsRestTopX', s, d.hoodsTopX, d.hoodsTopY, wallX, d.hoodsTopY, true, 50, false, 0.3);
-	measLine('hoodsRestTopY', s, d.hoodsTopX, d.hoodsTopY, d.hoodsTopX, floorY, false, 50);
+	//measLine('hoodsRestTopX', s, d.hoodsTopX, d.hoodsTopY, wallX, d.hoodsTopY, true, 50, false, 0.3);
+	//measLine('hoodsRestTopY', s, d.hoodsTopX, d.hoodsTopY, d.hoodsTopX, floorY, false, 50);
 
 	measLine('headsetBottomStack', s, d.headTubeBottomX-ze*Snap.cos(b.headTubeAngle), d.headTubeBottomY-ze*Snap.sin(b.headTubeAngle), d.headsetBottomX, d.headsetBottomY, false, 50);
 	tx = (b.forkRake+ze) * Snap.cos(90-b.headTubeAngle);
@@ -1912,12 +1912,12 @@
 	measLine('seatpostSetback', s, [ setbackBottomX - Snap.cos(90-b.seatTubeAngle) * (b.seatpostSetback+ze), setbackTopX ], [ setbackBottomY + Snap.sin(90-b.seatTubeAngle) * (b.seatpostSetback+ze), setbackTopY ], setbackBottomX, setbackBottomY, true, 25);
 
 	measLine('crankLength', s, d.bbX, d.bbY, d.bbX, d.bbY+b.crankLength, true, 0, true);
-	measLine('handlebarAndHoodsReach', s, d.stemFrontX, d.stemFrontY-0.5*b.handlebarDiameter, d.hoodsTopX, d.hoodsTopY, false, 100-b.handlebarDiameter/2);
-	angle = Snap.deg(Math.atan2(d.hoodsTopY - (d.stemFrontY - 0.5*b.handlebarDiameter), d.hoodsTopX - d.stemFrontX));
-	tx = d.stemFrontX;
-	ty = d.stemFrontY - 0.5*b.handlebarDiameter;
-	th = 280;
-	measAngle('stemToHoodsAngle', s, tx, ty, tx + th*Snap.cos(angle), ty + th*Snap.sin(angle), tx+th, ty);
+	//measLine('handlebarAndHoodsReach', s, d.stemFrontX, d.stemFrontY-0.5*b.handlebarDiameter, d.hoodsTopX, d.hoodsTopY, false, 100-b.handlebarDiameter/2);
+	//angle = Snap.deg(Math.atan2(d.hoodsTopY - (d.stemFrontY - 0.5*b.handlebarDiameter), d.hoodsTopX - d.stemFrontX));
+	//tx = d.stemFrontX;
+	//ty = d.stemFrontY - 0.5*b.handlebarDiameter;
+	//th = 280;
+	//measAngle('stemToHoodsAngle', s, tx, ty, tx + th*Snap.cos(angle), ty + th*Snap.sin(angle), tx+th, ty);
 
 	measLine('forkLengthDiagonal', s, d.headsetBottomX, d.headsetBottomY, d.frontWheelX, d.wheelY, true, 80);
 
@@ -1980,7 +1980,7 @@
 	measLine('pedalAxleToTire', s, d.bbX+b.crankLength*Snap.cos(angle), d.bbY-b.crankLength*Snap.sin(angle), d.frontWheelX-b.wheelRadius*Snap.cos(angle), d.wheelY+b.wheelRadius*Snap.sin(angle), false, 0);
 	measLine('seatpostHeadCenterToSaddleFront', s, [ d.saddleFrontX-Snap.sin(b.saddleAngle)*b.saddleStack, d.saddleFrontX ], [ d.saddleFrontY+Snap.cos(b.saddleAngle)*b.saddleStack, d.saddleFrontY ], setbackTopX, setbackTopY, true, b.saddleStack+30);
 	measLine('saddleCenterToBottomBracket', s, d.saddleCX, [ d.bbY, d.saddleCY ], d.bbX, d.bbY, false, b.bottomBracketDrop+100);
-	measLine('saddleTopToHoodsRest', s, [ d.hoodsTopX, d.saddleCX ], d.saddleCY, d.hoodsTopX, d.hoodsTopY, true, d.hoodsTopX - d.saddleFrontX - 90);
+	//measLine('saddleTopToHoodsRest', s, [ d.hoodsTopX, d.saddleCX ], d.saddleCY, d.hoodsTopX, d.hoodsTopY, true, d.hoodsTopX - d.saddleFrontX - 90);
 
 	if ($("#btnShadowBike").hasClass("btn-success")) {
 	    // draw Shadow bike
@@ -2021,8 +2021,8 @@
 	    measLine('saddleTopDeltaY', s, [ sd.saddleCX+xd, d.saddleCX ], d.saddleCY, sd.saddleCX+xd, sd.saddleCY+yd+ze, (d.saddleCY < sd.saddleCY+yd+ze), 250);
 	    measLine('stemFrontDeltaX', s, d.stemFrontX, [ sd.stemFrontY+yd, d.stemFrontY ], sd.stemFrontX+xd+ze, sd.stemFrontY+yd, (d.stemFrontX > sd.stemFrontX+xd+ze), 100);
 	    measLine('stemFrontDeltaY', s, [ sd.stemFrontX+xd, d.stemFrontX ], d.stemFrontY, sd.stemFrontX+xd, sd.stemFrontY+yd+ze, (d.stemFrontY < sd.stemFrontY+yd+ze), 200);
-	    measLine('hoodsTopDeltaX', s, d.hoodsTopX, [ sd.hoodsTopY+yd, d.hoodsTopY ], sd.hoodsTopX+xd+ze, sd.hoodsTopY+yd, (d.hoodsTopX > sd.hoodsTopX+xd+ze), 100);
-	    measLine('hoodsTopDeltaY', s, [ sd.hoodsTopX+xd, d.hoodsTopX ], d.hoodsTopY, sd.hoodsTopX+xd, sd.hoodsTopY+yd+ze, (d.hoodsTopY > sd.hoodsTopY+yd+ze), 100);
+	    //measLine('hoodsTopDeltaX', s, d.hoodsTopX, [ sd.hoodsTopY+yd, d.hoodsTopY ], sd.hoodsTopX+xd+ze, sd.hoodsTopY+yd, (d.hoodsTopX > sd.hoodsTopX+xd+ze), 100);
+	    //measLine('hoodsTopDeltaY', s, [ sd.hoodsTopX+xd, d.hoodsTopX ], d.hoodsTopY, sd.hoodsTopX+xd, sd.hoodsTopY+yd+ze, (d.hoodsTopY > sd.hoodsTopY+yd+ze), 100);
 	}
 
 	s.line(0, 0, 0, height).attr({'stroke': xyStroke, 'stroke-width': 1 });
