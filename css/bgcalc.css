@@ -1,0 +1,150 @@
+html {
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    overflow: hidden;  /*makes the body non-scrollable (we will add scrolling to the sidebar and main content containers)*/
+    margin: 0px;  /*removes default style*/
+    box-sizing: border-box;
+    display: flex;
+}
+
+.flex-column {
+    height: 100%;  /*allows both columns to span the full height of the browser window*/
+    display: flex;
+}
+
+.flex-content {
+    flex-grow: 1;  /*ensures that the container will take up the full height of the parent container*/
+    overflow-y: auto;  /*adds scroll to this container*/
+}
+
+#left-column {
+    flex: 1 1 auto;
+}
+#right-column {
+    flex: 1 1 30em;
+    max-width: 30em;
+    background-color: #eee;
+}
+#right-column.slide-out {
+    flex: 0 0 0;
+    transition: 400ms;
+    transform: translateX(100%);
+}
+#right-column.slide-in {
+    transition: 400ms;
+    transform: translateX(0);
+}
+#right-column-content {
+    hyphens: auto;
+}
+#right-column-content.slide-out {
+    width: 0;
+}
+#right-column-content.slide-in {
+    width: auto;
+    padding-left: 1em;
+    padding-right: 1em;
+}
+#right-column-menu {
+    background-color: #ddd;
+    padding: 0.3em;
+}
+#right-column-menu.slide-out {
+    display: none;
+}
+
+
+.slim-input {
+    line-height: 1rem;
+    padding: 0.25rem;
+}
+.minpad {
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+.measline:hover>text {
+    fill: black;
+    zindex: 100;
+}
+.measline:hover>line {
+    stroke: black;
+    zindex: 100;
+}
+.measline:hover>path {
+    stroke: black;
+    fill: black;
+    zindex: 100;
+}
+.measangle:hover>text {
+    fill: black;
+    zindex: 100;
+}
+.measangle:hover>line {
+    stroke: black;
+    zindex: 100;
+}
+.measangle:hover>path {
+    stroke: black;
+    zindex: 100;
+}
+
+#editNumLayout {
+    position: absolute;
+    top:0;
+    left:0;
+    transform:translateX(-400px);
+}
+#editNumInputLayout {
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #bbb;
+    text-align: center;
+    dominant-baseline: middle;
+}
+#editNum {
+    position: absolute;
+}
+#editNumInput {
+    position: absolute;
+    top: 0;
+    left: 0;
+    text-align: center;
+    dominant-baseline: middle;
+    border-radius: 2px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #aaa;
+}
+#measInfo {
+    display: none;
+    width: 100%;
+    text-align: center;
+}
+#buttonContainer {
+    padding-bottom: 10px;
+    padding-top: 10px;
+    text-align: center;
+}
+.btn {
+    margin: 2px;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+@media print {
+    #buttonContainer {
+	display: none;
+    }
+}

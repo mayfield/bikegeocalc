@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+
+        <title>Bike Geometry Calculator v2</title>
+
+        <link id="favicon" rel="shortcut icon" href="/images/favicon.png"/>
+        <link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css"/>
+        <link href="css/bgcalc.css" rel="stylesheet" type="text/css"/>
+
+        <script defer type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script>
+        <script defer type="text/javascript" src="node_modules/popper.js/dist/umd/popper.js"></script>
+        <script defer type="text/javascript" src="node_modules/screenfull/dist/screenfull.js"></script>
+        <script defer type="text/javascript" src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+        <script defer type="text/javascript" src="node_modules/snapsvg/dist/snap.svg.js"></script>
+        <script defer type="text/javascript" src="js/bgcalc.js"></script>
+    </head>
+
+    <body>
+        <div id="left-column" class="flex-column">
+            <div class="flex-content">
+                <div id="editNumLayout">
+                    <input id="editNumInputLayout" type="number">
+                </div>
+                <div id="editNum" style="display:none">
+                    <input id="editNumInput" type="number" style="width:5rem">
+                </div>
+                <div id="drawingContainer" class="container-fluid">
+                    <div id="drawingHeader" style="padding-top:1rem;text-align:center;font-size:1.5rem">
+                        <div id="bikeName" class="text-center" style="border: 1px solid;border-color:transparent"></div>
+                        <input id="editBikeNameInput" class="text-center center-block" style="display:none">
+                    </div>
+                    <div id="svgContainer">
+                        <svg id="bike" width="100%"></svg>
+                    </div>
+                    <div id="drawingFooter" style="height:3rem">
+                        <div id="measInfo"></div>
+                    </div>
+                </div>
+                <div class="container" id="buttonContainer" style="display:none">
+                    <div style="margin: 0 auto; text-align: left; display: inline-block">
+                        <button type="button" class="btn btn-danger" id="btnMeasXY">Measure</button>
+                        <button type="button" class="btn btn-success" id="btnMeasFrame">Frame Geometry</button>
+                        <button type="button" class="btn btn-danger" id="btnMeasComp">Components</button>
+                        <button type="button" class="btn btn-danger" id="btnMeasFit">Bike Fit</button>
+                        <button type="button" class="btn btn-danger" id="btnMeasQuick">Quick Fit</button>
+                        <button type="button" class="btn btn-danger" id="btnMeasDelta">Fit Delta</button>
+                        <button type="button" class="btn btn-danger" id="btnExtraMeasurements">Extra</button><br/>
+                        <div style="display:inline-block">
+                            <button type="button" class="btn btn-primary dropdown-toggle" id="btnForkMode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="fixedAngle">Fork: Fixed Angle</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-textValue="Fork: Fixed Angle" data-ddValue="fixedAngle">Fork edits: keep fixed head tube angle</a>
+                                <a class="dropdown-item" data-textValue="Fork: Rotate Frame" data-ddValue="rotateFrame">Fork edits: allow frame rotation</a>
+                            </div>
+                        </div>
+                        <div style="display:inline-block">
+                            <button type="button" class="btn btn-primary dropdown-toggle" id="btnHeadTubeMode" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="fixedTop">Head Tube: Fixed Top</button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" data-textValue="Head Tube: Fixed Top" data-ddValue="fixedTop">Head tube edits: keeps top position fixed</a>
+                                <a class="dropdown-item" data-textValue="Head Tube: Fixed Bottom" data-ddValue="fixedBottom">Head tube edits: keeps bottom position fixed</a>
+                            </div>
+                        </div>
+                        <div style="display:inline-block">
+                        <button type="button" class="btn btn-primary dropdown-toggle" id="btnShadowAnchor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-ddValue="bottomBracket">Anchor: Bottom Bracket</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-textValue="Anchor: Bottom Bracket" data-ddValue="bottomBracket">Shadow bike anchor: bottom bracket</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Saddle Top" data-ddValue="saddleTop">Shadow bike anchor: saddle top</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Hoods Top" data-ddValue="hoodsTop">Shadow bike anchor: hoods top</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Stem Front" data-ddValue="stemFront">Shadow bike anchor: stem front</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Ground" data-ddValue="ground">Shadow bike anchor: ground</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Front Hub" data-ddValue="frontHub">Shadow bike anchor: front hub</a>
+                            <a class="dropdown-item" data-textValue="Anchor: Back Hub" data-ddValue="backHub">Shadow bike anchor: back hub</a>
+                        </div>
+                    </div>
+                    <br/>
+                    <button type="button" class="btn btn-danger" id="btnShadowBike">Shadow Bike</button>
+                    <button type="button" class="btn btn-primary" id="btnSwapBikes">Swap Bikes</button>
+                    <button type="button" class="btn btn-primary" id="btnUndo">Undo</button>
+                    <div style="display:inline-block">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Export | Import</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="modal" data-target="#exportModal">Export/import/edit measurements as text</a>
+                            <a class="dropdown-item" data-toggle="modal" data-target="#importUrlModal">Import measurements from URL</a>
+                        </div>
+                    </div>
+                    <div style="display:inline-block">
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Reset</button>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" data-toggle="modal" data-target="#resetModal">Reset all measurements</a>
+                            <a class="dropdown-item" data-toggle="modal" data-target="#removeShadowModal">Remove shadow bike</a>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger" id="btnFullscreen">Fullscreen</button>
+                    <button type="button" class="btn btn-danger" id="btnHelp">Help</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alert Modal -->
+        <div class="modal fade" id="alertModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="alertTitle">Alert</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body" id="alertText">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset Modal -->
+        <div class="modal fade" id="resetModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Reset bike measurements</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to reset all bike measurements?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary"  data-dismiss="modal" id="btnReset">Reset</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Remove Shadow Bike Modal -->
+        <div class="modal fade" id="removeShadowModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Remove shadow bike</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to remove the shadow bike?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary"  data-dismiss="modal" id="btnRemoveShadow">Remove</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export/Import/Edit Modal -->
+        <div class="modal fade" id="exportModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Export, import or edit measurements</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="exportTextArea" rows="20" spellcheck="false" wrap="off" style="resize:none;width:100%"></textarea>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="btnCopy">Copy</button>
+                        <button type="button" class="btn btn-primary" id="btnClear">Clear</button>
+                        <button type="button" class="btn btn-primary" id="btnSave">Save&hellip;</button>
+                        <label class="btn btn-primary" style="margin-bottom:0">Load&hellip;</label>
+                        <input type="file" style="display: none;"/>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Import Url Modal -->
+        <div class="modal fade" id="importUrlModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Import from URL</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <textarea id="importUrlTextArea" rows="10" spellcheck="false" style="resize:none;width:100%"></textarea>
+                    </div>
+                    <div class="modal-footer flex-wrap">
+                        <button type="button" class="btn btn-primary mr-0" id="btnImportMain">Import Main Bike</button>
+                        <button type="button" class="btn btn-primary mr-0" id="btnImportShadow">Import Shadow Bike</button>
+                        <button type="button" class="btn btn-secondary mr-0" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

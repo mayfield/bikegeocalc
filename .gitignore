@@ -1,0 +1,8 @@
+package-lock.json
+node_modules
+dist
+*.swp
+.*.build
+.*.pass
+.cscope_db
+.DS_Store
