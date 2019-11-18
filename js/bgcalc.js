@@ -2063,7 +2063,7 @@
             };
             switch (ddValue) {
                 case 'bottomBracket':
-                    Object.assing(xyDiff, {
+                    Object.assign(xyDiff, {
                         x: d.bbX - sd.bbX,
                         y: d.bbY - sd.bbY
                     });
