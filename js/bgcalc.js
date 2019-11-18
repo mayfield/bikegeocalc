@@ -1732,10 +1732,27 @@
 	var d = deriveMeasurements(b, height);
 
 	// wheels
-	s.ellipse(d.backWheelX, d.wheelY, b.wheelRadius-13, b.wheelRadius-13).attr({stroke: '#cec', 'stroke-width': 26, 'fill': 'none'});
-	s.ellipse(d.backWheelX, d.wheelY, b.wheelRadius, b.wheelRadius).attr({stroke: '#0a0', 'stroke-width': sw, 'fill': 'none'});
-	s.ellipse(d.frontWheelX, d.wheelY, b.wheelRadius-13, b.wheelRadius-13).attr({stroke: '#cec', 'stroke-width': 26, 'fill': 'none'});
-	s.ellipse(d.frontWheelX, d.wheelY, b.wheelRadius, b.wheelRadius).attr({stroke: '#0a0', 'stroke-width': sw, 'fill': 'none'});
+	const tireRadius = 30
+	s.ellipse(d.backWheelX, d.wheelY, b.wheelRadius - tireRadius, b.wheelRadius - tireRadius).attr({
+        stroke: '#cec',
+        'stroke-width': tireRadius * 2,
+        'fill': 'none'
+    });
+	s.ellipse(d.backWheelX, d.wheelY, b.wheelRadius, b.wheelRadius).attr({
+        stroke: '#0a0',
+        'stroke-width': sw,
+        'fill': 'none'
+    });
+	s.ellipse(d.frontWheelX, d.wheelY, b.wheelRadius-tireRadius, b.wheelRadius-tireRadius).attr({
+        stroke: '#cec',
+        'stroke-width': tireRadius * 2,
+        'fill': 'none'
+    });
+	s.ellipse(d.frontWheelX, d.wheelY, b.wheelRadius, b.wheelRadius).attr({
+        stroke: '#0a0',
+        'stroke-width': sw,
+        'fill': 'none'
+    });
 
 	// XY offset
 	var xyStroke = ($("#btnMeasXY").hasClass("btn-success")) ? "#000" : "transparent";
