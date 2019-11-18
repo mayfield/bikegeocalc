@@ -1734,22 +1734,22 @@
 	// wheels
 	const tireRadius = 30
 	s.ellipse(d.backWheelX, d.wheelY, b.wheelRadius - tireRadius, b.wheelRadius - tireRadius).attr({
-        stroke: '#cec',
+        'stroke': '#cec',
         'stroke-width': tireRadius * 2,
         'fill': 'none'
     });
 	s.ellipse(d.backWheelX, d.wheelY, b.wheelRadius, b.wheelRadius).attr({
-        stroke: '#0a0',
+        'stroke': '#0a0',
         'stroke-width': sw,
         'fill': 'none'
     });
-	s.ellipse(d.frontWheelX, d.wheelY, b.wheelRadius-tireRadius, b.wheelRadius-tireRadius).attr({
-        stroke: '#cec',
+	s.ellipse(d.frontWheelX, d.wheelY, b.wheelRadius - tireRadius, b.wheelRadius - tireRadius).attr({
+        'stroke': '#cec',
         'stroke-width': tireRadius * 2,
         'fill': 'none'
     });
 	s.ellipse(d.frontWheelX, d.wheelY, b.wheelRadius, b.wheelRadius).attr({
-        stroke: '#0a0',
+        'stroke': '#0a0',
         'stroke-width': sw,
         'fill': 'none'
     });
