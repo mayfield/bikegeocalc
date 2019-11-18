@@ -1,16 +1,16 @@
 // vim: ts=4:sw=4:expandtab
-/* global $, Snap */
+/* global $, Snap, screenfull */
 
 
 (function() {
 
     function saveTextAsFile(fileNameToSaveAs, textToSave) {
-        var textToSaveAsBlob = new Blob([textToSave], {
+        const textToSaveAsBlob = new Blob([textToSave], {
             type: "text/plain"
         });
-        var textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
+        const textToSaveAsURL = window.URL.createObjectURL(textToSaveAsBlob);
 
-        var downloadLink = document.createElement("a");
+        const downloadLink = document.createElement("a");
         downloadLink.download = fileNameToSaveAs;
         downloadLink.innerHTML = "Download File";
         downloadLink.href = textToSaveAsURL;
@@ -24,68 +24,32 @@
     }
 
     function loadFileAsText(fileToLoad, onload) {
-        var fileReader = new FileReader();
+        const fileReader = new FileReader();
         fileReader.onload = onload;
         fileReader.readAsText(fileToLoad, "UTF-8");
     }
 
     function sortObj(obj) {
-        var temp_array = [];
-        for (var key in obj) {
+        const temp_array = [];
+        for (const key in obj) {
             if (obj.hasOwnProperty(key)) {
                 temp_array.push(key);
             }
         }
         temp_array.sort();
-        var temp_obj = {};
-        for (var i = 0; i < temp_array.length; i++) {
+        const temp_obj = {};
+        for (let i = 0; i < temp_array.length; i++) {
             temp_obj[temp_array[i]] = obj[temp_array[i]];
         }
         return temp_obj;
-    };
+    }
 
-    var svgSpriteLever = "c 0,0 24.392087,19.72517 36.180844,54.66167 0,0 48.236745,-30.38694 50.617265,-27.46066 13.22774,16.26033 -2.13336,46.45082 -1.94161,63.80264 0.14492,13.11371 2.54331,25.66832 12.12811,41.90993 2.16927,3.67587 6.06061,-1.1205 4.33431,-4.78877 -3.63415,-7.7223 -17.6519,-25.84293 -0.90925,-64.0124 6.02747,-13.74129 1.27891,-27.63638 1.03513,-39.83038 -0.25802,-12.90538 4.23583,-16.17481 4.0553,-27.93207 -0.17944,-11.686206 -4.60483,-28.102606 -7.97309,-30.333313 -3.07478,-2.036354 -9.1407,-2.063158 -12.07717,-0.758219 -7.23781,3.216404 -8.52361,17.896966 -16.42196,28.01355 -3.415642,4.374902 -10.491978,9.350212 -22.103999,8.780002 -13.58177,0.24058 -27.395276,-5.03101 -46.92388,-2.05198 z";
-
-    var glob = {
+    const glob = {
         bike: {
-            // xy measurements
-            //"offsetX": 100, //
-            //"offsetY": 100, //
-            //"bottomBracketY": , //
-            //"bottomBracketX": , //
-            //"seatTubeTopCenterY": 789, //
-            //"seatTubeTopCenterX": 588, //
-            //"saddleTopY": 988, //
-            //"saddleBackX": 401, //
-            //"hubY": 0, //
-            //"backHubX": , //
-            //"frontHubX": , //
-            //"headTubeTopCenterY": 790, //
-            //"headTubeTopCenterX": 1200, //
-            //"headTubeBottomCenterY": 690, //
-            //"headTubeBottomCenterX": 1220, //
-            //"handlebarTopY": 905,
-            //"handlebarBackX": 1200,
-            //"hoodsRestTopX": 1344, //
-            //"hoodsRestTopY": 866, //
-
-            // geometry chart measurements
-            //"topTubeHorizontal": 545, //
             "wheelBase": 991, //
-            //"bottomBracketToFrontHub": , //
-            //"stack": , //
-            //"reach": , //
             "bottomBracketDrop": 66, //
-            //"bottomBracketHeight": , //
-
-            // fit measurements
-            //"saddleTopToBottomBracket": 747, //
-
-            // component measurements
             "wheelRadius": 340, //
             "handlebarDiameter": 31.8, //
-            //"stemToHoodsAngle": , //
-            //"handlebarAndHoodsReach": , //
             "stemLength": 110,
             "stemAngle": 6,
             "stemStack": 40,
@@ -95,23 +59,15 @@
             "saddleLength": 275, //
             "saddleStack": 40, //
             "saddleAngle": 2, //
-            //"saddleFrontToCenter": 150, //
             "seatpostSetback": 25, //
-
-            // fork
             "forkLength": 350, //
             "forkRake": 45, //
-
-            // tube measurements
             "topTubeCenterToCenter": 545,
             "seatTubeCenterToTop": 540, //
             "headTubeLength": 125,
             "chainStayLength": 406, //
             "seatTubeTopToTopTubeCenter": 70, //
             "headTubeTopToTopTubeCenter": 30, //
-
-            //"trail": 0, //
-
             "seatTubeAngle": 74, //
             "headTubeAngle": 72, //
             "crankLength": 172.5 //
@@ -124,7 +80,7 @@
     };
 
     function normalizeBikeMeasurements(b) {
-        var tx, ty, th;
+        let tx, ty, th;
 
         // wheels and bottom bracket
         if (b.backHubX === undefined) {
@@ -182,13 +138,13 @@
             if (b.seatTubeCenterToTop === undefined) {
                 b.seatTubeCenterToTop = 520;
             }
-            var cosSTAngle = Snap.cos(b.seatTubeAngle);
+            const cosSTAngle = Snap.cos(b.seatTubeAngle);
             b.seatTubeTopCenterX = b.bottomBracketX - b.seatTubeCenterToTop * cosSTAngle;
         }
         if (b.seatTubeTopCenterY === undefined) {
             if (b.seatTubeAngle !== undefined) {
                 tx = b.bottomBracketX - b.seatTubeTopCenterX;
-                var tanSTAngle = Snap.tan(b.seatTubeAngle);
+                const tanSTAngle = Snap.tan(b.seatTubeAngle);
                 ty = tanSTAngle * tx;
                 b.seatTubeTopCenterY = ty + b.bottomBracketY;
             } else if (b.seatTubeCenterToTop !== undefined) {
@@ -221,9 +177,9 @@
         if (b.saddleFrontToCenter === undefined) {
             b.saddleFrontToCenter = Math.round(b.saddleLength * 0.55 / 10) * 10;
         }
-        var saddleCToBack = b.saddleLength - b.saddleFrontToCenter;
-        var cosSAngle = Snap.cos(b.saddleAngle);
-        var saddleCX;
+        const saddleCToBack = b.saddleLength - b.saddleFrontToCenter;
+        const cosSAngle = Snap.cos(b.saddleAngle);
+        let saddleCX;
         if (b.saddleBackX === undefined) {
             // assume saddle center is on axis of seat tube
             if (b.saddleTopY === undefined) {
@@ -239,8 +195,8 @@
         if (b.saddleTopY === undefined) {
             if (b.saddleTopToBottomBracket === undefined) {
                 // assume saddle center is on axis of seat tube
-                var tanSTAngle = Snap.tan(b.seatTubeAngle);
-                var seatTubeFloorX = b.bottomBracketX + b.bottomBracketY / tanSTAngle;
+                const tanSTAngle = Snap.tan(b.seatTubeAngle);
+                const seatTubeFloorX = b.bottomBracketX + b.bottomBracketY / tanSTAngle;
                 tx = seatTubeFloorX - saddleCX;
                 b.saddleTopY = tanSTAngle * tx;
             } else {
@@ -340,13 +296,13 @@
                 if (b.headsetBottomStack === undefined) {
                     b.headsetBottomStack = 2;
                 }
-                var angle = 90 - b.headTubeAngle;
-                var totLen = b.forkLength + b.headsetBottomStack + b.headTubeLength;
+                const angle = 90 - b.headTubeAngle;
+                let totLen = b.forkLength + b.headsetBottomStack + b.headTubeLength;
                 th = b.forkRake;
                 tx = th * Snap.cos(angle);
                 ty = th * Snap.sin(angle);
-                var x = b.frontHubX - tx;
-                var y = b.hubY - ty;
+                const x = b.frontHubX - tx;
+                const y = b.hubY - ty;
                 tx = totLen * Snap.cos(b.headTubeAngle);
                 ty = totLen * Snap.sin(b.headTubeAngle);
                 b.headTubeTopCenterX = x - tx;
@@ -368,14 +324,14 @@
                     if (b.forkLength === undefined) {
                         b.forkLength = 370;
                     }
-                    var totLen = b.headTubeLength + b.headsetBottomStack + b.forkLength;
+                    const totLen = b.headTubeLength + b.headsetBottomStack + b.forkLength;
                     if (b.forkRake === undefined) {
                         b.forkRake = 45;
                     }
                     th = Math.sqrt(totLen * totLen + b.forkRake * b.forkRake);
-                    var ty = Math.sqrt(th * th - tx * tx);
-                    var a2 = Snap.deg(Math.atan2(tx, ty));
-                    var a1 = Snap.asin(b.forkRake / th);
+                    ty = Math.sqrt(th * th - tx * tx);
+                    const a2 = Snap.deg(Math.atan2(tx, ty));
+                    const a1 = Snap.asin(b.forkRake / th);
                     b.headTubeAngle = 90 - (a2 - a1);
                     b.headTubeTopCenterY = ty + b.hubY;
                 } else if (b.forkRake === undefined) {
@@ -388,25 +344,25 @@
                     if (b.forkLength === undefined) {
                         b.forkLength = 370;
                     }
-                    var totLen = b.headTubeLength + b.headsetBottomStack + b.forkLength;
+                    const totLen = b.headTubeLength + b.headsetBottomStack + b.forkLength;
                     //T*T+r*r=x*x+y*y,T*sin(a)=r*sin(%pi/2-a)+y
-                    var T = totLen;
-                    var cos_a = Snap.cos(b.headTubeAngle);
-                    var cos_a_sq = cos_a * cos_a;
-                    var sin_a = Snap.sin(b.headTubeAngle);
-                    var sin_a_sq = sin_a * sin_a;
-                    var x = tx;
+                    const T = totLen;
+                    const cos_a = Snap.cos(b.headTubeAngle);
+                    const cos_a_sq = cos_a * cos_a;
+                    const sin_a = Snap.sin(b.headTubeAngle);
+                    const sin_a_sq = sin_a * sin_a;
+                    const x = tx;
                     b.forkRake = -(Math.sqrt((1 - cos_a_sq) * x * x + T * T * sin_a_sq + T * T * cos_a_sq - T * T) - T * cos_a * sin_a) / (cos_a_sq - 1);
-                    ty = -(T * sin_a - cos_a * Math.sqrt((-cos_a_sq * x * x) + x * x + T * T * sin_a_sq + T * T * cos_a_sq - T * T)) / (cos_a_sq - 1)
+                    ty = -(T * sin_a - cos_a * Math.sqrt((-cos_a_sq * x * x) + x * x + T * T * sin_a_sq + T * T * cos_a_sq - T * T)) / (cos_a_sq - 1);
                     b.headTubeTopCenterY = ty + b.hubY;
                 } else {
-                    var cos_a = Snap.cos(b.headTubeAngle);
-                    var cos_a_sq = cos_a * cos_a;
-                    var sin_a = Snap.sin(b.headTubeAngle);
-                    var sin_a_sq = sin_a * sin_a;
-                    var r = b.forkRake;
-                    var x = tx;
-                    var totLen = -(Math.sqrt((1 - sin_a_sq) * x * x + (sin_a_sq + cos_a_sq - 1) * r * r) - cos_a * sin_a * r) / (sin_a_sq - 1);
+                    const cos_a = Snap.cos(b.headTubeAngle);
+                    const cos_a_sq = cos_a * cos_a;
+                    const sin_a = Snap.sin(b.headTubeAngle);
+                    const sin_a_sq = sin_a * sin_a;
+                    const r = b.forkRake;
+                    const x = tx;
+                    const totLen = -(Math.sqrt((1 - sin_a_sq) * x * x + (sin_a_sq + cos_a_sq - 1) * r * r) - cos_a * sin_a * r) / (sin_a_sq - 1);
                     ty = (cos_a * r - sin_a * Math.sqrt((-sin_a_sq * x * x) + x * x + sin_a_sq * r * r + cos_a_sq * r * r - r * r)) / (sin_a_sq - 1);
                     b.headTubeTopCenterY = ty + b.hubY;
                     assignHeadLengths(totLen);
@@ -429,21 +385,21 @@
             tx = b.frontHubX - b.headTubeTopCenterX;
             ty = b.headTubeTopCenterY - b.hubY;
             th = Math.sqrt(tx * tx + ty * ty);
-            var a2 = Snap.deg(Math.atan2(tx, ty));
+            const a2 = Snap.deg(Math.atan2(tx, ty));
             if (b.headTubeAngle === undefined) {
                 if (b.forkRake === undefined) {
                     b.forkRake = 45;
                 }
-                var a1 = Snap.asin(b.forkRake / th);
+                const a1 = Snap.asin(b.forkRake / th);
                 b.headTubeAngle = 90 - (a2 - a1);
             }
-            var a3 = a2 - (90 - b.headTubeAngle);
+            const a3 = a2 - (90 - b.headTubeAngle);
             if (b.forkRake === undefined) {
-                var ttx = ty / Snap.tan(b.headTubeAngle);
+                const ttx = ty / Snap.tan(b.headTubeAngle);
                 b.forkRake = (tx - ttx) * Snap.cos(90 - b.headTubeAngle);
                 b.forkRake = th * Snap.sin(a3);
             }
-            var totLen = th * Snap.cos(a3);
+            const totLen = th * Snap.cos(a3);
             assignHeadLengths(totLen);
         }
         if (b.headTubeBottomCenterX === undefined || b.headTubeBottomCenterY === undefined) {
@@ -453,23 +409,21 @@
             b.headTubeBottomCenterY = b.headTubeTopCenterY - ty;
         }
 
-        {
-            b.stack = b.headTubeTopCenterY - b.bottomBracketY;
-            b.reach = b.headTubeTopCenterX - b.bottomBracketX;
-            var angle = 90 - b.seatTubeAngle;
-            ty = b.headTubeTopCenterY - b.seatTubeTopCenterY;
-            b.topTubeHorizontal = b.headTubeTopCenterX - b.seatTubeTopCenterX + ty * Snap.tan(angle);
-            var cosSTAngle = Snap.cos(b.seatTubeAngle);
-            var sinSTAngle = Snap.sin(b.seatTubeAngle);
-            var cosHTAngle = Snap.cos(b.headTubeAngle);
-            var sinHTAngle = Snap.sin(b.headTubeAngle);
-            var ttx = b.headTubeTopToTopTubeCenter * cosHTAngle + b.headTubeTopCenterX - (b.seatTubeTopToTopTubeCenter * cosSTAngle + b.seatTubeTopCenterX);
-            var tty = b.headTubeTopCenterY - b.headTubeTopToTopTubeCenter * sinHTAngle - (b.seatTubeTopCenterY - b.seatTubeTopToTopTubeCenter * sinSTAngle);
-            b.topTubeCenterToCenter = Math.sqrt(ttx * ttx + tty * tty);
+        b.stack = b.headTubeTopCenterY - b.bottomBracketY;
+        b.reach = b.headTubeTopCenterX - b.bottomBracketX;
+        const angle = 90 - b.seatTubeAngle;
+        ty = b.headTubeTopCenterY - b.seatTubeTopCenterY;
+        b.topTubeHorizontal = b.headTubeTopCenterX - b.seatTubeTopCenterX + ty * Snap.tan(angle);
+        const cosSTAngle = Snap.cos(b.seatTubeAngle);
+        const sinSTAngle = Snap.sin(b.seatTubeAngle);
+        const cosHTAngle = Snap.cos(b.headTubeAngle);
+        const sinHTAngle = Snap.sin(b.headTubeAngle);
+        const ttx = b.headTubeTopToTopTubeCenter * cosHTAngle + b.headTubeTopCenterX - (b.seatTubeTopToTopTubeCenter * cosSTAngle + b.seatTubeTopCenterX);
+        const tty = b.headTubeTopCenterY - b.headTubeTopToTopTubeCenter * sinHTAngle - (b.seatTubeTopCenterY - b.seatTubeTopToTopTubeCenter * sinSTAngle);
+        b.topTubeCenterToCenter = Math.sqrt(ttx * ttx + tty * tty);
 
-            tx = (b.headTubeTopCenterY - b.offsetY) / Snap.tan(b.headTubeAngle);
-            b.trail = b.headTubeTopCenterX + tx - b.frontHubX;
-        }
+        tx = (b.headTubeTopCenterY - b.offsetY) / Snap.tan(b.headTubeAngle);
+        b.trail = b.headTubeTopCenterX + tx - b.frontHubX;
 
         if (b.handlebarDiameter === undefined) {
             b.handlebarDiameter = 31.8;
@@ -490,20 +444,20 @@
             if (b.stemAngle === undefined) {
                 b.stemAngle = 6;
             }
-            var stemAbsAngle = 90 - b.headTubeAngle - b.stemAngle;
-            var stemFrontX = b.handlebarBackX + b.handlebarDiameter * 0.5;
-            var stemFrontY = b.handlebarTopY - b.handlebarDiameter * 0.5;
+            const stemAbsAngle = 90 - b.headTubeAngle - b.stemAngle;
+            const stemFrontX = b.handlebarBackX + b.handlebarDiameter * 0.5;
+            const stemFrontY = b.handlebarTopY - b.handlebarDiameter * 0.5;
 
-            var T = Snap.tan(stemAbsAngle);
-            var U = Snap.tan(90 - b.headTubeAngle);
-            var Y = stemFrontY - b.headTubeTopCenterY;
-            var X = stemFrontX - b.headTubeTopCenterX;
+            const T = Snap.tan(stemAbsAngle);
+            const U = Snap.tan(90 - b.headTubeAngle);
+            const Y = stemFrontY - b.headTubeTopCenterY;
+            const X = stemFrontX - b.headTubeTopCenterX;
             // y + x = Y
             // y / T = X + U * x
             tx = (Y - T * X) / (T * U + 1);
-            ty = (T * U * Y + T * X) / (T * U + 1)
-            var stemBackY = b.headTubeTopCenterY + tx;
-            var stemBackX = b.headTubeTopCenterX - U * tx;
+            ty = (T * U * Y + T * X) / (T * U + 1);
+            const stemBackY = b.headTubeTopCenterY + tx;
+            const stemBackX = b.headTubeTopCenterX - U * tx;
 
             tx = stemFrontX - stemBackX;
             ty = stemFrontY - stemBackY;
@@ -528,9 +482,9 @@
             th = b.headsetTopStack + b.headsetSpacersStack + b.stemStack * 0.5;
             tx = th * Snap.cos(b.headTubeAngle);
             ty = th * Snap.sin(b.headTubeAngle);
-            var stemBackX = b.headTubeTopCenterX - tx;
-            var stemBackY = b.headTubeTopCenterY + ty;
-            var stemAbsAngle = 90 - b.headTubeAngle - b.stemAngle;
+            const stemBackX = b.headTubeTopCenterX - tx;
+            const stemBackY = b.headTubeTopCenterY + ty;
+            const stemAbsAngle = 90 - b.headTubeAngle - b.stemAngle;
             if (b.handlebarBackX === undefined) {
                 if (b.stemLength === undefined) {
                     b.stemLength = 110;
@@ -546,25 +500,6 @@
             b.handlebarBackX = stemBackX + tx - b.handlebarDiameter * 0.5;
         }
 
-        if (b.hoodsRestTopX === undefined || b.hoodsRestTopY === undefined) {
-            if (b.handlebarAndHoodsReach === undefined) {
-                b.handlebarAndHoodsReach = 116;
-            }
-            if (b.stemToHoodsAngle === undefined) {
-                b.stemToHoodsAngle = -2;
-            }
-            th = b.handlebarAndHoodsReach;
-            tx = th * Snap.cos(b.stemToHoodsAngle);
-            ty = th * Snap.sin(b.stemToHoodsAngle);
-            b.hoodsRestTopX = b.handlebarBackX + b.handlebarDiameter * 0.5 + tx;
-            b.hoodsRestTopY = b.handlebarTopY - ty;
-        } else {
-            tx = b.hoodsRestTopX - b.handlebarBackX - b.handlebarDiameter * 0.5;
-            ty = b.handlebarTopY - b.hoodsRestTopY;
-            b.stemToHoodsAngle = Snap.deg(Math.atan2(ty, tx));
-            b.handlebarAndHoodsReach = Math.sqrt(tx * tx + ty * ty);
-        }
-
         if (b.crankLength === undefined) {
             b.crankLength = 172.5;
         }
@@ -575,9 +510,9 @@
     }
 
     function humpbackToSpaces(str) {
-        out = "";
-        for (var i = 0, len = str.length; i < len; i++) {
-            var c = str.charAt(i);
+        let out = "";
+        for (let i = 0, len = str.length; i < len; i++) {
+            const c = str.charAt(i);
             if (c == c.toUpperCase()) {
                 out += " " + c.toLowerCase();
             } else {
@@ -588,8 +523,8 @@
     }
 
     function makeMeasHelpText(editName) {
-        var text = humpbackToSpaces(editName);
-        var extra;
+        const text = humpbackToSpaces(editName);
+        let extra;
 
         // some measurements get additional explanation
         if (editName == "handlebarDiameter" ||
@@ -618,10 +553,6 @@
             extra = "from top tube front horizontally back to center of seattube/seatpost";
         } else if (editName == "bottomBracketHeight") {
             extra = "includes height of inflated tires";
-        } else if (editName == "hoodsRestTopX" || editName == "hoodsRestTopY") {
-            extra = "where the purlicue rests";
-        } else if (editName == "handlebarAndHoodsReach") {
-            extra = "typical hoods only: 36mm";
         } else if (editName == "saddleFrontToHandlebarCenter") {
             extra = "horizontal";
         } else if (editName == "steeringLength") {
@@ -633,11 +564,11 @@
     }
 
     function setEditNumAttr(input, editName) {
-        var b = glob.bike;
-        var step = 1;
-        var min = 0;
-        var max = 2000;
-        var tx, ty;
+        const b = glob.bike;
+        let min = 0;
+        let max = 2000;
+        let step = 1;
+        let tx, ty;
         if (editName == "handlebarDiameter") {
             step = 0.1;
         } else if (editName == "crankLength") {
@@ -656,8 +587,7 @@
         } else if (editName == "frontHubX" ||
             editName == "handlebarBackX" ||
             editName == "headTubeTopCenterX" ||
-            editName == "headTubeBottomCenterX" ||
-            editName == "hoodsRestTopX") {
+            editName == "headTubeBottomCenterX") {
             min = b.bottomBracketX + 200;
             max = b.bottomBracketX + 1000;
         } else if (editName == "hubY") {
@@ -729,10 +659,7 @@
         } else if (editName == "stemAngle") {
             min = -260;
             max = 80;
-        } else if (editName == "stemToHoodsAngle") {
-            min = -80;
-            max = 80;
-        } else if (editName == "stemLength" || editName == "handlebarAndHoodsReach") {
+        } else if (editName == "stemLength") {
             min = 0;
             max = 300;
         } else if (editName == "forkRake") {
@@ -755,9 +682,6 @@
         } else if (editName == "saddleTopToHandlebarTop") {
             min = 0;
             max = Math.floor(b.saddleTopY - b.handlebarTopY + b.headsetSpacersStack / Snap.sin(b.headTubeAngle) - 2); // approx
-        } else if (editName == "saddleTopToHoodsRest") {
-            min = 0;
-            max = Math.floor(b.saddleTopY - b.hoodsRestTopY + b.headsetSpacersStack / Snap.sin(b.headTubeAngle) - 2); // approx
         } else if (editName == "saddleFrontToHandlebarCenter") {
             min = 200;
             max = b.topTubeHorizontal + 500;
@@ -792,13 +716,13 @@
     function rotateFrame(b, diff) {
         // rotate around the back wheel
         function modifyAngle(b, diff, xName, yName) {
-            var a1 = Snap.deg(Math.atan2(b[yName] - b.hubY, b[xName] - b.backHubX)) + diff;
-            var len = Math.sqrt((b[yName] - b.hubY) * (b[yName] - b.hubY) + (b[xName] - b.backHubX) * (b[xName] - b.backHubX));
+            const a1 = Snap.deg(Math.atan2(b[yName] - b.hubY, b[xName] - b.backHubX)) + diff;
+            const len = Math.sqrt((b[yName] - b.hubY) * (b[yName] - b.hubY) + (b[xName] - b.backHubX) * (b[xName] - b.backHubX));
             b[xName] = b.backHubX + len * Snap.cos(a1);
             b[yName] = b.hubY + len * Snap.sin(a1);
         }
 
-        var saddleCToBack = b.saddleLength - b.saddleFrontToCenter;
+        const saddleCToBack = b.saddleLength - b.saddleFrontToCenter;
         b.tempSaddleCX = b.saddleBackX + Snap.cos(b.saddleAngle) * saddleCToBack;
         b.tempHbBackY = b.handlebarTopY - b.handlebarDiameter / 2;
         b.tempHbTopX = b.handlebarBackX + b.handlebarDiameter / 2;
@@ -809,7 +733,6 @@
         modifyAngle(b, diff, "headTubeBottomCenterX", "headTubeBottomCenterY");
         modifyAngle(b, diff, "handlebarBackX", "tempHbBackY");
         modifyAngle(b, diff, "tempHbTopX", "handlebarTopY");
-        modifyAngle(b, diff, "hoodsRestTopX", "hoodsRestTopY");
         modifyAngle(b, diff, "tempSaddleCX", "saddleTopY");
         b.saddleBackX = b.tempSaddleCX - Snap.cos(b.saddleAngle) * saddleCToBack;
         delete b.tempSaddleCX;
@@ -818,25 +741,25 @@
     }
 
     function placeEditNumBox(editName) {
-        var svg = document.getElementById('bike');
-        var te = $("#" + editName + "-svg");
-        var fontSize = parseInt(te.css('font-size'));
-        var rect = svg.getBoundingClientRect();
-        var s = Snap("#bike");
-        vb = s.attr('viewBox');
-        var mul = rect.height / vb.height;
-        var xo = (rect.width - mul * vb.width) / 2;
-        var fs = mul * fontSize;
+        const svg = document.getElementById('bike');
+        const te = $("#" + editName + "-svg");
+        const fontSize = parseInt(te.css('font-size'));
+        const rect = svg.getBoundingClientRect();
+        const s = Snap("#bike");
+        const vb = s.attr('viewBox');
+        const mul = rect.height / vb.height;
+        const xo = (rect.width - mul * vb.width) / 2;
+        const fs = mul * fontSize;
         $("#editNum").css({
             'top': rect.top + scrollY + mul * (parseFloat(te.attr('y')) - vb.y) - $("#editNumInputLayout").outerHeight() / 2,
             'left': rect.left + scrollX + xo + mul * (parseFloat(te.attr('x')) - vb.x) - 2 * fs
         });
     }
 
-    function measurementChange(event) {
-        var input = $("#editNumInput");
-        var editName = input.attr("edit-name");
-        var val = parseFloat(input.val());
+    function measurementChange() {
+        const input = $("#editNumInput");
+        const editName = input.attr("edit-name");
+        let val = parseFloat(input.val());
         if (isNaN(val)) {
             input.val(input.attr("old-value"));
             return;
@@ -846,15 +769,15 @@
         } else if (val > parseFloat(input.attr("max"))) {
             val = parseFloat(input.attr("max"));
         }
-        var b = Object.assign({}, glob.bike);
-        var oldval = b[editName];
+        const b = Object.assign({}, glob.bike);
+        let oldval = b[editName];
         if (oldval !== undefined) {
             b[editName] = val;
         } else {
             oldval = input.attr("old-value");
         }
-        var diff = val - oldval;
-        var tx, ty, th, a1, xdiff, ydiff;
+        let diff = val - oldval;
+        let tx, ty, th, a1, xdiff, ydiff;
         if (editName == 'offsetX') {
             b.bottomBracketX += diff;
             b.backHubX += diff;
@@ -863,7 +786,6 @@
             b.headTubeTopCenterX += diff;
             b.seatTubeTopCenterX += diff;
             b.handlebarBackX += diff;
-            b.hoodsRestTopX += diff;
             b.saddleBackX += diff;
         } else if (editName == 'backHubX') {
             b.frontHubX = undefined;
@@ -876,7 +798,6 @@
             b.headTubeTopCenterY += diff;
             b.seatTubeTopCenterY += diff;
             b.handlebarTopY += diff;
-            b.hoodsRestTopY += diff;
             b.saddleTopY += diff;
         } else if (editName == 'saddleLength') {
             if (val < b.saddleFrontToCenter + 10) {
@@ -896,13 +817,8 @@
             ty = b.headTubeTopCenterY - b.headTubeBottomCenterY;
             a1 = Snap.deg(Math.atan2(ty, tx));
             b.frontHubX = b.headTubeBottomCenterX + tx / ty * (b.headTubeBottomCenterY - b.hubY) + b.forkRake / Snap.cos(90 - a1);
-            b.stemToHoodsAngle += b.headTubeAngle - a1;
             b.handlebarBackX = undefined;
             b.handlebarTopY = undefined;
-            b.hoodsRestTopX = undefined;
-            b.hoodsRestTopY = undefined;
-        } else if (editName == "handlebarBackX") {
-            b.hoodsRestTopX += diff;
         } else if (editName == "wheelRadius") {
             b.backHubX = undefined;
             b.frontHubX = undefined;
@@ -920,8 +836,6 @@
             b.headTubeTopCenterY = undefined;
             b.handlebarBackX = undefined;
             b.handlebarTopY = undefined;
-            b.hoodsRestTopX = undefined;
-            b.hoodsRestTopY = undefined;
         } else if (editName == "chainStayLength" || editName == "chainStayLengthHorizontal") {
             if (editName == "chainStayLengthHorizontal") {
                 tx = diff;
@@ -935,7 +849,6 @@
             b.headTubeBottomCenterX += tx;
             b.headTubeTopCenterX += tx;
             b.handlebarBackX += tx;
-            b.hoodsRestTopX += tx;
             b.frontHubX += tx;
             b.wheelBase += tx;
         } else if (editName == "bottomBracketToFrontHub" || editName == "bottomBracketToFrontHubHorizontal") {
@@ -987,22 +900,18 @@
             b.wheelBase = undefined;
             b.handlebarBackX = undefined;
             b.handlebarTopY = undefined;
-            b.hoodsRestTopX = undefined;
-            b.hoodsRestTopY = undefined;
             b.headsetBottomStack = undefined;
-            b.stemToHoodsAngle -= diff;
             ty = b.headTubeTopCenterY - b.hubY;
-            var tx1 = ty / Snap.tan(oldval) + b.forkRake / Snap.cos(90 - oldval);
-            var tx2 = ty / Snap.tan(val) + b.forkRake / Snap.cos(90 - val);
+            const tx1 = ty / Snap.tan(oldval) + b.forkRake / Snap.cos(90 - oldval);
+            const tx2 = ty / Snap.tan(val) + b.forkRake / Snap.cos(90 - val);
             b.frontHubX += tx2 - tx1;
         } else if (editName == "stack" || editName == "standoverHeight") {
-            var ty1 = b.headTubeTopCenterY - b.hubY;
+            const ty1 = b.headTubeTopCenterY - b.hubY;
             b.headTubeTopCenterY += diff;
-            var ty2 = b.headTubeTopCenterY - b.hubY;
+            const ty2 = b.headTubeTopCenterY - b.hubY;
             b.seatTubeTopCenterY += diff;
             b.seatTubeTopCenterX -= diff / Snap.tan(b.seatTubeAngle);
             b.handlebarTopY += diff;
-            b.hoodsRestTopY += diff;
             b.headTubeLength = undefined;
             ty = b.headTubeTopCenterY - b.headTubeBottomCenterY;
             b.headTubeBottomCenterX = b.headTubeTopCenterX + ty / Snap.tan(b.headTubeAngle);
@@ -1014,19 +923,18 @@
             b.headTubeBottomCenterX += diff;
             b.headTubeTopCenterX += diff;
             b.handlebarBackX += diff;
-            b.hoodsRestTopX += diff;
         } else if (editName == "topTubeCenterToCenter") {
-            var cosSTAngle = Snap.cos(b.seatTubeAngle);
-            var sinSTAngle = Snap.sin(b.seatTubeAngle);
-            var cosHTAngle = Snap.cos(b.headTubeAngle);
-            var sinHTAngle = Snap.sin(b.headTubeAngle);
-            var topTubeBackX = b.seatTubeTopToTopTubeCenter * cosSTAngle + b.seatTubeTopCenterX;
-            var topTubeBackY = b.seatTubeTopCenterY - b.seatTubeTopToTopTubeCenter * sinSTAngle;
-            var topTubeFrontX = b.headTubeTopToTopTubeCenter * cosHTAngle + b.headTubeTopCenterX;
-            var topTubeFrontY = b.headTubeTopCenterY - b.headTubeTopToTopTubeCenter * sinHTAngle;
+            const cosSTAngle = Snap.cos(b.seatTubeAngle);
+            const sinSTAngle = Snap.sin(b.seatTubeAngle);
+            const cosHTAngle = Snap.cos(b.headTubeAngle);
+            const sinHTAngle = Snap.sin(b.headTubeAngle);
+            const topTubeBackX = b.seatTubeTopToTopTubeCenter * cosSTAngle + b.seatTubeTopCenterX;
+            const topTubeBackY = b.seatTubeTopCenterY - b.seatTubeTopToTopTubeCenter * sinSTAngle;
+            const topTubeFrontX = b.headTubeTopToTopTubeCenter * cosHTAngle + b.headTubeTopCenterX;
+            const topTubeFrontY = b.headTubeTopCenterY - b.headTubeTopToTopTubeCenter * sinHTAngle;
             tx = topTubeFrontX - topTubeBackX;
             ty = topTubeFrontY - topTubeBackY;
-            var ttAngle = Snap.deg(Math.atan2(ty, tx));
+            const ttAngle = Snap.deg(Math.atan2(ty, tx));
             tx = topTubeBackX + val * Snap.cos(ttAngle);
             ty = topTubeBackY + val * Snap.sin(ttAngle);
             xdiff = (tx - b.headTubeTopToTopTubeCenter * cosHTAngle) - b.headTubeTopCenterX;
@@ -1038,16 +946,13 @@
             b.headTubeLength = undefined;
             b.handlebarBackX += xdiff;
             b.handlebarTopY += ydiff;
-            b.hoodsRestTopX += xdiff;
-            b.hoodsRestTopY += ydiff;
             b.frontHubX += xdiff;
         } else if (editName == "pedalAxleToTire") {
-            angle = Snap.deg(Math.atan2(b.hubY - b.bottomBracketY, b.frontHubX - b.bottomBracketX));
+            const angle = Snap.deg(Math.atan2(b.hubY - b.bottomBracketY, b.frontHubX - b.bottomBracketX));
             xdiff = diff / Snap.cos(angle);
             b.headTubeTopCenterX += xdiff;
             b.headTubeBottomCenterX += xdiff;
             b.handlebarBackX += xdiff;
-            b.hoodsRestTopX += xdiff;
             b.frontHubX += xdiff;
         } else if (editName == "headTubeLength") {
             if ($("#btnHeadTubeMode").attr("data-ddValue") == "fixedBottom") {
@@ -1058,7 +963,6 @@
                 b.frontHubX -= xdiff;
                 b.headTubeTopCenterY += ydiff;
                 b.handlebarTopY += ydiff;
-                b.hoodsRestTopY += ydiff;
             } else {
                 // increase length downwards, shorten fork
                 b.headTubeBottomCenterX = b.headTubeTopCenterX + Snap.cos(b.headTubeAngle) * val;
@@ -1097,7 +1001,7 @@
                         b.headTubeLength -= diff;
                     }
                 } else if (editName == "forkRake") {
-                    var angle = 90 - b.headTubeAngle;
+                    const angle = 90 - b.headTubeAngle;
                     b.frontHubX += diff / Snap.cos(angle);
                     b.forkLength = undefined;
                 }
@@ -1105,26 +1009,26 @@
                 // rotate the frame
                 tx = b.headTubeBottomCenterX - b.backHubX;
                 ty = b.headTubeBottomCenterY - b.hubY;
-                var D = Math.sqrt(tx * tx + ty * ty);
-                var A = Snap.deg(Math.atan2(ty, tx));
-                var B = b.headTubeAngle;
-                var F = Math.sqrt(b.forkRake * b.forkRake + b.forkLength * b.forkLength);
-                var C = b.headTubeAngle - Snap.deg(Math.atan2(b.forkRake, b.forkLength));
-                var L = b.headsetBottomStack;
+                const D = Math.sqrt(tx * tx + ty * ty);
+                const A = Snap.deg(Math.atan2(ty, tx));
+                const B = b.headTubeAngle;
+                const F = Math.sqrt(b.forkRake * b.forkRake + b.forkLength * b.forkLength);
+                const C = b.headTubeAngle - Snap.deg(Math.atan2(b.forkRake, b.forkLength));
+                const L = b.headsetBottomStack;
                 // formula to solve: D*sin(A+x) - L*sin(B-x) - F*sin(C-x) = 0
-                var cosA = Snap.cos(A);
-                var cosB = Snap.cos(B);
-                var cosC = Snap.cos(C);
-                var cos2A = cosA * cosA;
-                var cos2B = cosB * cosB;
-                var cos2C = cosC * cosC;
-                var sinA = Snap.sin(A);
-                var sinB = Snap.sin(B);
-                var sinC = Snap.sin(C);
-                var sin2A = sinA * sinA;
-                var sin2B = sinB * sinB;
-                var sin2C = sinC * sinC;
-                var angleDiff = Snap.acos((D * cosA + L * cosB + F * cosC) / Math.sqrt(-2 * D * L * sinA * sinB + 2 * D * L * cosA * cosB - 2 * D * F * sinA * sinC + 2 * D * F * cosA * cosC + D * D * sin2A + D * D * cos2A + 2 * F * L * sinB * sinC + 2 * F * L * cosB * cosC + L * L * sin2B + L * L * cos2B + F * F * sin2C + F * F * cos2C));
+                const cosA = Snap.cos(A);
+                const cosB = Snap.cos(B);
+                const cosC = Snap.cos(C);
+                const cos2A = cosA * cosA;
+                const cos2B = cosB * cosB;
+                const cos2C = cosC * cosC;
+                const sinA = Snap.sin(A);
+                const sinB = Snap.sin(B);
+                const sinC = Snap.sin(C);
+                const sin2A = sinA * sinA;
+                const sin2B = sinB * sinB;
+                const sin2C = sinC * sinC;
+                let angleDiff = Snap.acos((D * cosA + L * cosB + F * cosC) / Math.sqrt(-2 * D * L * sinA * sinB + 2 * D * L * cosA * cosB - 2 * D * F * sinA * sinC + 2 * D * F * cosA * cosC + D * D * sin2A + D * D * cos2A + 2 * F * L * sinB * sinC + 2 * F * L * cosB * cosC + L * L * sin2B + L * L * cos2B + F * F * sin2C + F * F * cos2C));
                 if (oldval > val) {
                     angleDiff = -angleDiff;
                 }
@@ -1143,24 +1047,15 @@
             tx = diff * Snap.cos(b.headTubeAngle);
             ty = diff * Snap.sin(b.headTubeAngle);
             b.handlebarBackX -= tx;
-            b.hoodsRestTopX -= tx;
             b.handlebarTopY += ty;
-            b.hoodsRestTopY += ty;
         } else if (editName == "stemStack") {
             tx = 0.5 * diff * Snap.cos(b.headTubeAngle);
             ty = 0.5 * diff * Snap.sin(b.headTubeAngle);
             b.handlebarBackX -= tx;
-            b.hoodsRestTopX -= tx;
             b.handlebarTopY += ty;
-            b.hoodsRestTopY += ty;
         } else if (editName == "stemAngle" || editName == "stemLength" || editName == "handlebarDiameter") {
             b.handlebarBackX = undefined;
             b.handlebarTopY = undefined;
-            b.hoodsRestTopX = undefined;
-            b.hoodsRestTopY = undefined;
-        } else if (editName == "stemToHoodsAngle" || editName == "handlebarAndHoodsReach") {
-            b.hoodsRestTopX = undefined;
-            b.hoodsRestTopY = undefined;
         } else if (editName == "saddleTopToBottomBracket" || editName == "seatpostExtension") {
             tx = diff * Snap.cos(b.seatTubeAngle);
             ty = diff * Snap.sin(b.seatTubeAngle);
@@ -1168,15 +1063,12 @@
             b.saddleTopY += ty;
         } else if (editName == 'saddleFrontToBottomBracket' || editName == 'saddleCenterToBottomBracket') {
             b.saddleBackX -= diff;
-        } else if (editName == 'saddleTopToHandlebarTop' || editName == 'saddleTopToHoodsRest') {
+        } else if (editName == 'saddleTopToHandlebarTop') {
             b.handlebarTopY -= diff;
             b.handlebarBackX = undefined;
-            b.hoodsRestTopY -= diff;
-            b.hoodsRestTopX = undefined;
             b.headsetSpacersStack -= diff / Snap.sin(b.headTubeAngle);
         } else if (editName == 'saddleFrontToHandlebarCenter') {
             b.handlebarBackX += diff;
-            b.hoodsRestTopX += diff;
         } else if (editName == 'trail') {
             b.frontHubX -= diff;
             b.forkRake = undefined;
@@ -1186,8 +1078,8 @@
             b.saddleTopY -= diff * Snap.sin(b.saddleAngle);
         } else if (editName == 'frontHubToHandlebarBottom') {
             // FIXME: approximate
-            var stemFrontX = b.handlebarBackX + b.handlebarDiameter * 0.5;
-            var stemFrontY = b.handlebarTopY - b.handlebarDiameter * 0.5;
+            const stemFrontX = b.handlebarBackX + b.handlebarDiameter * 0.5;
+            const stemFrontY = b.handlebarTopY - b.handlebarDiameter * 0.5;
             a1 = Snap.deg(Math.atan2(stemFrontY - b.hubY, b.frontHubX - stemFrontX));
             diff = diff / Snap.sin(a1) * Snap.sin(b.headTubeAngle);
             if (-diff > b.headsetSpacersStack) {
@@ -1197,13 +1089,11 @@
             tx = diff * Snap.cos(b.headTubeAngle);
             ty = diff * Snap.sin(b.headTubeAngle);
             b.handlebarBackX -= tx;
-            b.hoodsRestTopX -= tx;
             b.handlebarTopY += ty;
-            b.hoodsRestTopY += ty;
         } else if (editName == 'saddleFrontToHandlebarBack' || editName == 'saddleTopToStemFront') {
-            var stemFrontX = b.handlebarBackX + b.handlebarDiameter * 0.5;
-            var stemFrontY = b.handlebarTopY - b.handlebarDiameter * 0.5;
-            var saddleX, saddleY;
+            const stemFrontX = b.handlebarBackX + b.handlebarDiameter * 0.5;
+            const stemFrontY = b.handlebarTopY - b.handlebarDiameter * 0.5;
+            let saddleX, saddleY;
             if (editName == 'saddleTopToStemFront') {
                 saddleX = b.saddleBackX + Snap.cos(b.saddleAngle) * (b.saddleLength - b.saddleFrontToCenter);
                 saddleY = b.saddleTopY;
@@ -1223,12 +1113,11 @@
             }
             b.stemLength = undefined;
             b.handlebarBackX += diff;
-            b.hoodsRestTopX += diff;
         }
         normalizeBikeMeasurements(b);
         pushBike(b);
         refreshSvg();
-        var normValue = b[editName];
+        let normValue = b[editName];
         if (normValue !== undefined) {
             normValue = Math.round(normValue * 1000) / 1000;
             input.val(normValue);
@@ -1240,13 +1129,11 @@
     }
 
     function onClickMeasurement(event, s, fontSize, editName, valueStr) {
-        var uneditable = {
+        const uneditable = {
             "saddleTopDeltaX": 1,
             "saddleTopDeltaY": 1,
             "bottomBracketDeltaX": 1,
             "bottomBracketDeltaY": 1,
-            "hoodsTopDeltaX": 1,
-            "hoodsTopDeltaY": 1,
             "stemFrontDeltaX": 1,
             "stemFrontDeltaY": 1
         };
@@ -1256,11 +1143,11 @@
             $('#alertModal').modal('show');
             return;
         }
-        var svg = document.getElementById('bike');
-        var rect = svg.getBoundingClientRect();
-        vb = s.attr('viewBox');
-        var mul = rect.width / vb.width;
-        var fs = mul * fontSize;
+        const svg = document.getElementById('bike');
+        const rect = svg.getBoundingClientRect();
+        const vb = s.attr('viewBox');
+        const mul = rect.width / vb.width;
+        const fs = mul * fontSize;
         $("#editNumInput").val(valueStr);
         setEditNumAttr($("#editNumInput"), editName);
         $("#editNumInputLayout").css({
@@ -1277,7 +1164,7 @@
         event.stopPropagation();
     }
 
-    var measurementGroups = [{
+    const measurementGroups = [{
         "name": "XY",
         "measurements": {
             "saddleFrontToCenter": 1,
@@ -1304,8 +1191,6 @@
             "handlebarTopY": 1,
             "saddleTopY": 1,
             "saddleBackX": 1,
-            "hoodsRestTopX": 1,
-            "hoodsRestTopY": 1,
             "headTubeLength": 1,
             "headsetBottomStack": 1,
             "forkRake": 1,
@@ -1326,8 +1211,6 @@
             "headsetSpacersStack": 1,
             "stemLength": 1,
             "crankLength": 1,
-            "handlebarAndHoodsReach": 1,
-            "stemToHoodsAngle": 1,
             "stack": 1,
             "reach": 1,
             "topTubeHorizontal": 1,
@@ -1346,7 +1229,6 @@
             "seatpostSetback": 2,
             "saddleStack": 2,
             "standoverHeight": 2,
-            "saddleTopToHoodsRest": 2,
             "pedalAxleToTire": 2,
             "saddleCenterToBottomBracket": 2,
             "saddleTopToStemFront": 2,
@@ -1357,8 +1239,6 @@
         "measurements": {
             "saddleFrontToCenter": 1,
             "crankLength": 1,
-            "handlebarAndHoodsReach": 1,
-            "stemToHoodsAngle": 1,
             "saddleTopToBottomBracket": 1,
             "saddleFrontToHandlebarBack": 1,
             "frontHubToHandlebarBottom": 1,
@@ -1384,8 +1264,6 @@
             "saddleStack": 1,
             "seatpostSetback": 1,
             "crankLength": 1,
-            "handlebarAndHoodsReach": 1,
-            "stemToHoodsAngle": 1,
             "wheelRadius": 1,
             "steererColumnLength": 2,
             "steeringLength": 2,
@@ -1430,8 +1308,6 @@
             "saddleTopDeltaY": 1,
             "bottomBracketDeltaX": 1,
             "bottomBracketDeltaY": 1,
-            "hoodsTopDeltaX": 1,
-            "hoodsTopDeltaY": 1,
             "stemFrontDeltaX": 1,
             "stemFrontDeltaY": 1
         }
@@ -1443,9 +1319,9 @@
     }];
 
     function measurementIsActive(editName) {
-        for (var i = 0; i < measurementGroups.length; i++) {
+        for (let i = 0; i < measurementGroups.length; i++) {
             if ($("#btnMeas" + measurementGroups[i].name).hasClass("btn-success")) {
-                var num = measurementGroups[i].measurements[editName];
+                const num = measurementGroups[i].measurements[editName];
                 if (num == 1 || (num == 2 && $("#btnExtraMeasurements").hasClass("btn-success"))) {
                     return true;
                 }
@@ -1476,45 +1352,45 @@
         if (typeof yc == "number") {
             yc = [yc, yc];
         }
-        var ty = y2 - yc[0];
-        var tx = x2 - xc[0];
-        var length = Math.sqrt(ty * ty + tx * tx);
-        var lineAngle = Snap.deg(Math.atan2(ty, tx));
-        var angle = lineAngle + (isLeft ? 90 : -90);
-        var extra = 10;
-        var alen = 20;
+        let ty = y2 - yc[0];
+        let tx = x2 - xc[0];
+        const length = Math.sqrt(ty * ty + tx * tx);
+        const lineAngle = Snap.deg(Math.atan2(ty, tx));
+        const angle = lineAngle + (isLeft ? 90 : -90);
+        const extra = 10;
+        let alen = 20;
         if (alen * 2.3 > length) {
             alen = length / 2.3;
         }
-        var px1 = xc[0] + offset * Snap.cos(angle);
-        var py1 = yc[0] + offset * Snap.sin(angle);
-        var px2 = x2 + offset * Snap.cos(angle);
-        var py2 = y2 + offset * Snap.sin(angle);
+        const px1 = xc[0] + offset * Snap.cos(angle);
+        const py1 = yc[0] + offset * Snap.sin(angle);
+        let px2 = x2 + offset * Snap.cos(angle);
+        let py2 = y2 + offset * Snap.sin(angle);
 
         tx = alen;
         ty = 5;
-        th = Math.sqrt(tx * tx + ty * ty);
-        var arrowAngle = Snap.deg(Math.atan2(ty, tx));
-        var aa1 = lineAngle + arrowAngle;
-        var aa2 = lineAngle - arrowAngle;
-        var a1x = px1 + th * Snap.cos(aa1);
-        var a1y = py1 + th * Snap.sin(aa1);
-        var a2x = px1 + th * Snap.cos(aa2);
-        var a2y = py1 + th * Snap.sin(aa2);
-        var a3x = px2 + th * Snap.cos(aa1 + 180);
-        var a3y = py2 + th * Snap.sin(aa1 + 180);
-        var a4x = px2 + th * Snap.cos(aa2 + 180);
-        var a4y = py2 + th * Snap.sin(aa2 + 180);
+        const th = Math.sqrt(tx * tx + ty * ty);
+        const arrowAngle = Snap.deg(Math.atan2(ty, tx));
+        const aa1 = lineAngle + arrowAngle;
+        const aa2 = lineAngle - arrowAngle;
+        const a1x = px1 + th * Snap.cos(aa1);
+        const a1y = py1 + th * Snap.sin(aa1);
+        const a2x = px1 + th * Snap.cos(aa2);
+        const a2y = py1 + th * Snap.sin(aa2);
+        const a3x = px2 + th * Snap.cos(aa1 + 180);
+        const a3y = py2 + th * Snap.sin(aa1 + 180);
+        const a4x = px2 + th * Snap.cos(aa2 + 180);
+        const a4y = py2 + th * Snap.sin(aa2 + 180);
 
-        var e = [];
+        const e = [];
         e.push(s.path("M" + px1 + " " + py1 + "L" + a1x + " " + a1y + "L" + a2x + " " + a2y + "L" + px1 + " " + py1 + "L" + px2 + " " + py2 + "L" + a3x + " " + a3y + "L" + a4x + " " + a4y + "L" + px2 + " " + py2).attr({
             'fill': '#888',
             'stroke': '#888',
             'stroke-width': 1
         }));
-        var lengthStr = decimalPoint ? (Math.round(10 * length) / 10).toString() : Math.round(length).toString();
-        var fontSize = 30;
-        var tx1, ty1;
+        const lengthStr = decimalPoint ? (Math.round(10 * length) / 10).toString() : Math.round(length).toString();
+        const fontSize = 30;
+        let tx1, ty1;
         if (length < 2 * fontSize + 10) {
             tx1 = px1 - fontSize * Snap.cos(lineAngle);
             ty1 = py1 - fontSize * Snap.sin(lineAngle);
@@ -1526,7 +1402,7 @@
             tx1 = px1 + length * textPos * Snap.cos(lineAngle);
             ty1 = py1 + length * textPos * Snap.sin(lineAngle);
         }
-        var et = s.text(tx1, ty1, lengthStr).attr({
+        const et = s.text(tx1, ty1, lengthStr).attr({
             'font-size': fontSize,
             'fill': '#888',
             'text-anchor': 'middle',
@@ -1539,12 +1415,12 @@
 
         if (offset > 0) {
             // fixme: better way to figure out if it should be + or - extra
-            var px1a = xc[0] + (offset + extra) * Snap.cos(angle);
-            var py1a = yc[0] + (offset + extra) * Snap.sin(angle);
-            var d1 = Math.sqrt((xc[1] - px1a) * (xc[1] - px1a) + (yc[1] - py1a) * (yc[1] - py1a));
-            var px1b = xc[0] + (offset - extra) * Snap.cos(angle);
-            var py1b = yc[0] + (offset - extra) * Snap.sin(angle);
-            var d2 = Math.sqrt((xc[1] - px1b) * (xc[1] - px1b) + (yc[1] - py1b) * (yc[1] - py1b));
+            const px1a = xc[0] + (offset + extra) * Snap.cos(angle);
+            const py1a = yc[0] + (offset + extra) * Snap.sin(angle);
+            const d1 = Math.sqrt((xc[1] - px1a) * (xc[1] - px1a) + (yc[1] - py1a) * (yc[1] - py1a));
+            const px1b = xc[0] + (offset - extra) * Snap.cos(angle);
+            const py1b = yc[0] + (offset - extra) * Snap.sin(angle);
+            const d2 = Math.sqrt((xc[1] - px1b) * (xc[1] - px1b) + (yc[1] - py1b) * (yc[1] - py1b));
             px2 = x2 + (offset + extra) * Snap.cos(angle);
             py2 = y2 + (offset + extra) * Snap.sin(angle);
             e.push(s.line(xc[1], yc[1], d1 > d2 ? px1a : px1b, d1 > d2 ? py1a : py1b).attr({
@@ -1559,10 +1435,10 @@
 
         s.g.apply(s, e).attr({
             'class': 'measline'
-        }).mouseover(function(event) {
+        }).mouseover(function() {
             $("#measInfo").text(makeMeasHelpText(editName));
             $("#measInfo").show();
-        }).mouseout(function(event) {
+        }).mouseout(function() {
             $("#measInfo").hide();
         });
     }
@@ -1575,7 +1451,7 @@
             y3 = y1;
             x3 = x1 - 100;
         }
-        var e = [];
+        const e = [];
         e.push(s.line(x1, y1, x2, y2).attr({
             'stroke': '#888',
             'stroke-width': 1
@@ -1584,48 +1460,46 @@
             'stroke': '#888',
             'stroke-width': 1
         }));
-        var angle1 = Snap.deg(Math.atan2(y1 - y2, x1 - x2));
-        var angle2 = Snap.deg(Math.atan2(y1 - y3, x1 - x3));
-        var angle = angle1 - angle2;
+        const angle1 = Snap.deg(Math.atan2(y1 - y2, x1 - x2));
+        const angle2 = Snap.deg(Math.atan2(y1 - y3, x1 - x3));
+        let angle = angle1 - angle2;
         if (Math.abs(angle + 360) < Math.abs(angle)) {
             angle += 360;
         }
-        var fontSize = 30;
-        var r = Math.sqrt((x3 - x1) * (x3 - x1) + (y3 - y1) * (y3 - y1)) - 40;
-        var xs = x1 - r * Snap.cos(angle2);
-        var ys = y1 - r * Snap.sin(angle2);
-        var xe = x1 - r * Snap.cos(angle1);
-        var ye = y1 - r * Snap.sin(angle1);
-        var swap = angle < 0 ? "0" : "1";
+        const fontSize = 30;
+        const r = Math.sqrt((x3 - x1) * (x3 - x1) + (y3 - y1) * (y3 - y1)) - 40;
+        const xs = x1 - r * Snap.cos(angle2);
+        const ys = y1 - r * Snap.sin(angle2);
+        const xe = x1 - r * Snap.cos(angle1);
+        const ye = y1 - r * Snap.sin(angle1);
+        const swap = angle < 0 ? "0" : "1";
         e.push(s.path("M" + xs + " " + ys + "A" + r + " " + r + " 0 0 " + swap + " " + xe + " " + ye).attr({
             'fill': 'none',
             'stroke': '#888',
             'stroke-width': 1
         }));
-        var tx1 = x1 - Snap.cos(angle2 + angle / 2) * r;
-        var ty1 = y1 - Snap.sin(angle2 + angle / 2) * r;
-        var angleStr = (Math.round(100 * angle) / 100).toString() + "°";
+        const tx1 = x1 - Snap.cos(angle2 + angle / 2) * r;
+        const ty1 = y1 - Snap.sin(angle2 + angle / 2) * r;
+        const angleStr = (Math.round(100 * angle) / 100).toString() + "°";
         e.push(s.text(tx1, ty1, angleStr).attr({
             'font-size': fontSize,
             'fill': '#888',
             'text-anchor': 'middle',
             'dominant-baseline': 'middle',
             'id': editName + "-svg"
-        }).click(function(event) {
-            onClickMeasurement(event, s, fontSize, editName, angleStr.substring(0, angleStr.length - 1));
+        }).click(ev => {
+            onClickMeasurement(ev, s, fontSize, editName, angleStr.substring(0, angleStr.length - 1));
         }));
         s.g.apply(s, e).attr({
             'class': 'measangle'
-        }).mouseover(function(event) {
+        }).mouseover(() => {
             $("#measInfo").text(makeMeasHelpText(editName));
             $("#measInfo").show();
-        }).mouseout(function(event) {
-            $("#measInfo").hide();
-        });
+        }).mouseout(() => $("#measInfo").hide());
     }
 
     function updateHash() {
-        var str = bikeToUrlString(glob.bike);
+        let str = bikeToUrlString(glob.bike);
         if (!$.isEmptyObject(glob.shadowBike)) {
             str += bikeToUrlString(glob.shadowBike);
         }
@@ -1637,7 +1511,7 @@
     }
 
     function updateName() {
-        var text = glob.bike.name;
+        let text = glob.bike.name;
         if (text == "" || text === undefined) {
             text = "Unnamed";
             glob.bike.name = text;
@@ -1660,7 +1534,7 @@
     }
 
     function deriveMeasurements(b, height) {
-        var d = {};
+        const d = {};
 
         d.bbX = b.bottomBracketX;
         d.bbY = height - b.bottomBracketY;
@@ -1697,8 +1571,6 @@
         d.stemFrontY = d.stemBackY - Snap.sin(d.stemAbsAngle) * b.stemLength;
         d.steererTopX = d.headTubeTopX - d.cosHTAngle * d.steererTopLength;
         d.steererTopY = d.headTubeTopY - d.sinHTAngle * d.steererTopLength;
-        d.hoodsTopX = b.hoodsRestTopX;
-        d.hoodsTopY = height - b.hoodsRestTopY;
 
         d.saddleCToBack = b.saddleLength - b.saddleFrontToCenter;
         d.cosSAngle = Snap.cos(b.saddleAngle);
@@ -1715,23 +1587,23 @@
     }
 
     function drawShadowBike(s, b, d, xyDiff) {
-        var tx, ty;
-        var bbShellRadius = 20;
-        var xd = xyDiff.x;
-        var yd = xyDiff.y;
+        let tx, ty;
+        const bbShellRadius = 20;
+        const xd = xyDiff.x;
+        const yd = xyDiff.y;
 
-        var stroke = 'rgba(0,0,0,0.5)';
-        var frameAttr = {
+        const stroke = 'rgba(0,0,0,0.5)';
+        const frameAttr = {
             'stroke': stroke,
             'stroke-width': 4,
             'stroke-dasharray': '4 4'
         };
-        var thinAttr = {
+        const thinAttr = {
             'stroke': stroke,
             'stroke-width': 2,
             'stroke-dasharray': '3 3'
         };
-        var pointAttr = {
+        const pointAttr = {
             'stroke': stroke,
             'stroke-width': 2,
             'fill': 'none'
@@ -1765,35 +1637,28 @@
             'fill': 'none'
         });
 
-        //tx = d.hoodsTopX+xd - 65.3;
-        //ty = d.hoodsTopY+yd + 3.1;
-        //var lever = s.path("m " + tx + "," + ty + svgSpriteLever).attr(thinAttr).attr({'fill':'none'});
-
-        //s.line(d.stemFrontX+xd, d.stemFrontY+yd-0.5*b.handlebarDiameter, d.hoodsTopX+xd, d.hoodsTopY+yd).attr(thinAttr);
-        //s.ellipse(d.hoodsTopX+xd, d.hoodsTopY+yd, 5, 5).attr(pointAttr);
-
         // saddle
         s.line(d.saddleBackX + xd, d.saddleBackY + yd, d.saddleFrontX + xd, d.saddleFrontY + yd).attr(frameAttr);
         s.ellipse(d.saddleCX + xd, d.saddleCY + yd, 5, 5).attr(pointAttr);
     }
 
     function refreshSvg() {
-        var b = glob.bike;
-        var tx, ty, th, angle;
-        var sw = 2.0;
-        var s = Snap("#bike");
-        var height = b.saddleTopY + 180;
-        var floorY = height;
-        var wallX = 0;
-        var bbShellRadius = 20;
-        var hubRadius = 10;
-        var seatpostDiameter = 27.2;
+        const b = glob.bike;
+        let tx, ty, th, angle;
+        const sw = 2.0;
+        const s = Snap("#bike");
+        const height = b.saddleTopY + 180;
+        const floorY = height;
+        const wallX = 0;
+        const bbShellRadius = 20;
+        const hubRadius = 10;
+        const seatpostDiameter = 27.2;
         s.clear();
 
-        var d = deriveMeasurements(b, height);
+        const d = deriveMeasurements(b, height);
 
         // wheels
-        const tireRadius = 30
+        const tireRadius = 30;
         s.ellipse(d.backWheelX, d.wheelY, b.wheelRadius - tireRadius, b.wheelRadius - tireRadius).attr({
             'stroke': '#cec',
             'stroke-width': tireRadius * 2,
@@ -1816,7 +1681,7 @@
         });
 
         // XY offset
-        var xyStroke = ($("#btnMeasXY").hasClass("btn-success")) ? "#000" : "transparent";
+        const xyStroke = ($("#btnMeasXY").hasClass("btn-success")) ? "#000" : "transparent";
         if (b.offsetY > 0) {
             s.line(b.backHubX - 150, height - b.offsetY, b.frontHubX + 150, height - b.offsetY).attr({
                 'stroke': xyStroke,
@@ -1974,7 +1839,7 @@
             'stroke': '#bbf',
             'stroke-width': 30
         });
-        var stemDiameter = 30;
+        let stemDiameter = 30;
         if (stemDiameter > b.stemStack - 4) {
             stemDiameter = b.stemStack - 4;
         }
@@ -2003,13 +1868,6 @@
             'stroke-width': sw
         });
 
-        //tx = d.hoodsTopX - 65.3;
-        //ty = d.hoodsTopY + 3.1;
-        //var lever = s.path("m " + tx + "," + ty + svgSpriteLever).attr({stroke: 'none', 'fill': '#ddd'});
-
-        //s.line(d.stemFrontX, d.stemFrontY-0.5*b.handlebarDiameter, d.hoodsTopX, d.hoodsTopY).attr({'stroke': '#66e', 'stroke-width': sw, 'stroke-dasharray': '7, 7' });
-        //s.ellipse(d.hoodsTopX, d.hoodsTopY, 5, 5).attr({stroke: '#00a', 'stroke-width': sw, 'fill': 'none'});
-
         // saddle
         s.polygon(d.saddleBackX, d.saddleBackY, d.saddleBackX - 20 * d.sinSAngle, d.saddleBackY + 20 * d.cosSAngle, d.saddleFrontX - 5 * d.sinSAngle, d.saddleFrontY + 5 * d.cosSAngle, d.saddleFrontX, d.saddleFrontY).attr({
             'stroke': 'none',
@@ -2026,28 +1884,28 @@
         });
 
         // seatpost
-        var seatpostIntersectX = (d.bbX * d.tanSTAngle - d.saddleBackX * d.tanSAngle - d.bbY + d.saddleBackY) / (d.tanSTAngle - d.tanSAngle);
-        var seatpostIntersectY = d.bbY - (d.bbX - seatpostIntersectX) * d.tanSTAngle;
-        var seatpostTopY = seatpostIntersectY + b.saddleStack / Snap.sin(b.seatTubeAngle - b.saddleAngle);
-        var seatpostTopX = d.seatTubeTopX - (d.seatTubeTopY - seatpostTopY) / d.tanSTAngle;
-        var sbAngle = 90 - b.seatTubeAngle + b.saddleAngle;
-        var setbackAlongSaddle = b.seatpostSetback / Snap.cos(sbAngle);
-        var setbackTopX = seatpostTopX - setbackAlongSaddle * d.cosSAngle;
-        var setbackTopY = seatpostTopY - setbackAlongSaddle * d.sinSAngle;
-        var seatpostSbAngle = 60;
-        var sbAngle2 = seatpostSbAngle - (90 - b.seatTubeAngle);
+        const seatpostIntersectX = (d.bbX * d.tanSTAngle - d.saddleBackX * d.tanSAngle - d.bbY + d.saddleBackY) / (d.tanSTAngle - d.tanSAngle);
+        const seatpostIntersectY = d.bbY - (d.bbX - seatpostIntersectX) * d.tanSTAngle;
+        const seatpostTopY = seatpostIntersectY + b.saddleStack / Snap.sin(b.seatTubeAngle - b.saddleAngle);
+        const seatpostTopX = d.seatTubeTopX - (d.seatTubeTopY - seatpostTopY) / d.tanSTAngle;
+        const sbAngle = 90 - b.seatTubeAngle + b.saddleAngle;
+        const setbackAlongSaddle = b.seatpostSetback / Snap.cos(sbAngle);
+        const setbackTopX = seatpostTopX - setbackAlongSaddle * d.cosSAngle;
+        const setbackTopY = seatpostTopY - setbackAlongSaddle * d.sinSAngle;
+        const seatpostSbAngle = 60;
+        const sbAngle2 = seatpostSbAngle - (90 - b.seatTubeAngle);
         th = b.seatpostSetback / Snap.cos(seatpostSbAngle);
         tx = th * Snap.cos(sbAngle2);
         ty = th * Snap.sin(sbAngle2);
-        var setbackBottomX = setbackTopX + tx;
-        var setbackBottomY = setbackTopY + ty;
+        const setbackBottomX = setbackTopX + tx;
+        const setbackBottomY = setbackTopY + ty;
 
         // saddle rail
-        var srSpan = 20;
-        var srBackX = setbackTopX - srSpan * d.cosSAngle;
-        var srBackY = setbackTopY - srSpan * d.sinSAngle;
-        var srFrontX = setbackTopX + srSpan * d.cosSAngle;
-        var srFrontY = setbackTopY + srSpan * d.sinSAngle;
+        const srSpan = 20;
+        const srBackX = setbackTopX - srSpan * d.cosSAngle;
+        const srBackY = setbackTopY - srSpan * d.sinSAngle;
+        const srFrontX = setbackTopX + srSpan * d.cosSAngle;
+        const srFrontY = setbackTopY + srSpan * d.sinSAngle;
 
         s.polygon(srBackX, srBackY, srFrontX, srFrontY,
             setbackBottomX + seatpostDiameter * 0.5 * Snap.cos(90 - b.seatTubeAngle),
@@ -2085,7 +1943,7 @@
         });
 
         // measurements
-        var ze = 0.01; // "invisible" extra distance for measurements that can be zero to keep direction of line
+        const ze = 0.01; // "invisible" extra distance for measurements that can be zero to keep direction of line
         measLine('saddleFrontToCenter', s, d.saddleCX, d.saddleCY, d.saddleFrontX, d.saddleFrontY, false, 60);
         measLine('saddleLength', s, d.saddleBackX, d.saddleBackY, d.saddleFrontX, d.saddleFrontY, false, 90);
         measAngle('saddleAngle', s, d.saddleBackX, d.saddleBackY, d.saddleBackX - 100 * Snap.cos(b.saddleAngle), d.saddleBackY - 100 * Snap.sin(b.saddleAngle));
@@ -2111,16 +1969,13 @@
         measLine('headTubeBottomCenterX', s, d.headTubeBottomX, d.headTubeBottomY, wallX, d.headTubeBottomY, false, 0, false, 0.3);
         measLine('headTubeBottomCenterY', s, d.headTubeBottomX, d.headTubeBottomY, d.headTubeBottomX, floorY, false, 0);
 
-        var handlebarTopY = d.stemFrontY - b.handlebarDiameter * 0.5;
-        var handlebarBackX = d.stemFrontX - b.handlebarDiameter * 0.5;
+        const handlebarTopY = d.stemFrontY - b.handlebarDiameter * 0.5;
+        const handlebarBackX = d.stemFrontX - b.handlebarDiameter * 0.5;
         measLine('handlebarBackX', s, handlebarBackX, d.stemFrontY, wallX, d.stemFrontY, true, b.handlebarDiameter * 0.5 + 15, false, 0.3);
         measLine('handlebarTopY', s, d.stemFrontX, handlebarTopY, d.stemFrontX, floorY, false, b.handlebarDiameter * 0.5 + 15);
 
         measLine('saddleTopY', s, d.saddleCX, d.saddleCY, d.saddleCX, floorY, true, 0);
         measLine('saddleBackX', s, d.saddleBackX, d.saddleBackY, wallX, d.saddleBackY, true, 50);
-
-        //measLine('hoodsRestTopX', s, d.hoodsTopX, d.hoodsTopY, wallX, d.hoodsTopY, true, 50, false, 0.3);
-        //measLine('hoodsRestTopY', s, d.hoodsTopX, d.hoodsTopY, d.hoodsTopX, floorY, false, 50);
 
         measLine('headsetBottomStack', s, d.headTubeBottomX - ze * Snap.cos(b.headTubeAngle), d.headTubeBottomY - ze * Snap.sin(b.headTubeAngle), d.headsetBottomX, d.headsetBottomY, false, 50);
         tx = (b.forkRake + ze) * Snap.cos(90 - b.headTubeAngle);
@@ -2135,15 +1990,7 @@
         measLine('handlebarDiameter', s, d.stemFrontX + b.handlebarDiameter / 2, d.stemFrontY, d.stemFrontX - b.handlebarDiameter / 2, d.stemFrontY, true, 50, true);
         measLine('saddleStack', s, srBackX, srBackY, srBackX + Snap.sin(b.saddleAngle) * (b.saddleStack + ze), srBackY - Snap.cos(b.saddleAngle) * (b.saddleStack + ze), false, 80);
         measLine('seatpostSetback', s, [setbackBottomX - Snap.cos(90 - b.seatTubeAngle) * (b.seatpostSetback + ze), setbackTopX], [setbackBottomY + Snap.sin(90 - b.seatTubeAngle) * (b.seatpostSetback + ze), setbackTopY], setbackBottomX, setbackBottomY, true, 25);
-
         measLine('crankLength', s, d.bbX, d.bbY, d.bbX, d.bbY + b.crankLength, true, 0, true);
-        //measLine('handlebarAndHoodsReach', s, d.stemFrontX, d.stemFrontY-0.5*b.handlebarDiameter, d.hoodsTopX, d.hoodsTopY, false, 100-b.handlebarDiameter/2);
-        //angle = Snap.deg(Math.atan2(d.hoodsTopY - (d.stemFrontY - 0.5*b.handlebarDiameter), d.hoodsTopX - d.stemFrontX));
-        //tx = d.stemFrontX;
-        //ty = d.stemFrontY - 0.5*b.handlebarDiameter;
-        //th = 280;
-        //measAngle('stemToHoodsAngle', s, tx, ty, tx + th*Snap.cos(angle), ty + th*Snap.sin(angle), tx+th, ty);
-
         measLine('forkLengthDiagonal', s, d.headsetBottomX, d.headsetBottomY, d.frontWheelX, d.wheelY, true, 80);
 
         measLine('stack', s, [d.headTubeTopX, d.bbX], d.bbY, d.headTubeTopX, d.headTubeTopY, false, b.reach - 100);
@@ -2205,80 +2052,70 @@
         measLine('pedalAxleToTire', s, d.bbX + b.crankLength * Snap.cos(angle), d.bbY - b.crankLength * Snap.sin(angle), d.frontWheelX - b.wheelRadius * Snap.cos(angle), d.wheelY + b.wheelRadius * Snap.sin(angle), false, 0);
         measLine('seatpostHeadCenterToSaddleFront', s, [d.saddleFrontX - Snap.sin(b.saddleAngle) * b.saddleStack, d.saddleFrontX], [d.saddleFrontY + Snap.cos(b.saddleAngle) * b.saddleStack, d.saddleFrontY], setbackTopX, setbackTopY, true, b.saddleStack + 30);
         measLine('saddleCenterToBottomBracket', s, d.saddleCX, [d.bbY, d.saddleCY], d.bbX, d.bbY, false, b.bottomBracketDrop + 100);
-        //measLine('saddleTopToHoodsRest', s, [ d.hoodsTopX, d.saddleCX ], d.saddleCY, d.hoodsTopX, d.hoodsTopY, true, d.hoodsTopX - d.saddleFrontX - 90);
-
         if ($("#btnShadowBike").hasClass("btn-success")) {
             // draw Shadow bike
-            var sb = glob.shadowBike;
-            var sd = deriveMeasurements(sb, height);
-            var ddValue = $("#btnShadowAnchor").attr("data-ddValue");
-            var xyDiff = {
+            const sb = glob.shadowBike;
+            const sd = deriveMeasurements(sb, height);
+            const ddValue = $("#btnShadowAnchor").attr("data-ddValue");
+            const xyDiff = {
                 x: 0,
                 y: 0
             };
             switch (ddValue) {
                 case 'bottomBracket':
-                    xyDiff = {
+                    Object.assing(xyDiff, {
                         x: d.bbX - sd.bbX,
                         y: d.bbY - sd.bbY
-                    };
+                    });
                     break;
                 case 'saddleTop':
-                    xyDiff = {
+                    Object.assign(xyDiff, {
                         x: d.saddleCX - sd.saddleCX,
                         y: d.saddleCY - sd.saddleCY
-                    };
-                    break;
-                case 'hoodsTop':
-                    xyDiff = {
-                        x: d.hoodsTopX - sd.hoodsTopX,
-                        y: d.hoodsTopY - sd.hoodsTopY
-                    };
+                    });
                     break;
                 case 'stemFront':
-                    xyDiff = {
+                    Object.assign(xyDiff, {
                         x: d.stemFrontX - sd.stemFrontX,
                         y: d.stemFrontY - sd.stemFrontY
-                    };
+                    });
                     break;
                 case 'ground':
-                    xyDiff = {
+                    Object.assign(xyDiff, {
                         x: d.bbX - sd.bbX,
                         y: b.hubY + b.offsetY - sb.hubY - sb.offsetY
-                    };
+                    });
                     break;
                 case 'frontHub':
-                    xyDiff = {
+                    Object.assign(xyDiff, {
                         x: b.frontHubX - sb.frontHubX,
                         y: d.wheelY - sd.wheelY
-                    };
+                    });
                     break;
                 case 'backHub':
-                    xyDiff = {
+                    Object.assign(xyDiff, {
                         x: b.backHubX - sb.backHubX,
                         y: d.wheelY - sd.wheelY
-                    };
+                    });
                     break;
             }
             drawShadowBike(s, sb, sd, xyDiff);
 
-            var xd = xyDiff.x;
-            var yd = xyDiff.y;
+            const xd = xyDiff.x;
+            const yd = xyDiff.y;
             measLine('bottomBracketDeltaX', s, d.bbX, [sd.bbY + yd, d.bbY], sd.bbX + xd + ze, sd.bbY + yd, (d.bbX < sd.bbX + xd + ze), 100);
             measLine('bottomBracketDeltaY', s, [sd.bbX + xd, d.bbX], d.bbY, sd.bbX + xd, sd.bbY + yd + ze, (d.bbY > sd.bbY + yd + ze), 100);
             measLine('saddleTopDeltaX', s, d.saddleCX, [sd.saddleCY + yd, d.saddleCY], sd.saddleCX + xd + ze, sd.saddleCY + yd, (d.saddleCX > sd.saddleCX + xd + ze), 50);
             measLine('saddleTopDeltaY', s, [sd.saddleCX + xd, d.saddleCX], d.saddleCY, sd.saddleCX + xd, sd.saddleCY + yd + ze, (d.saddleCY < sd.saddleCY + yd + ze), 250);
             measLine('stemFrontDeltaX', s, d.stemFrontX, [sd.stemFrontY + yd, d.stemFrontY], sd.stemFrontX + xd + ze, sd.stemFrontY + yd, (d.stemFrontX > sd.stemFrontX + xd + ze), 100);
             measLine('stemFrontDeltaY', s, [sd.stemFrontX + xd, d.stemFrontX], d.stemFrontY, sd.stemFrontX + xd, sd.stemFrontY + yd + ze, (d.stemFrontY < sd.stemFrontY + yd + ze), 200);
-            //measLine('hoodsTopDeltaX', s, d.hoodsTopX, [ sd.hoodsTopY+yd, d.hoodsTopY ], sd.hoodsTopX+xd+ze, sd.hoodsTopY+yd, (d.hoodsTopX > sd.hoodsTopX+xd+ze), 100);
-            //measLine('hoodsTopDeltaY', s, [ sd.hoodsTopX+xd, d.hoodsTopX ], d.hoodsTopY, sd.hoodsTopX+xd, sd.hoodsTopY+yd+ze, (d.hoodsTopY > sd.hoodsTopY+yd+ze), 100);
         }
 
         s.line(0, 0, 0, height).attr({
             'stroke': xyStroke,
             'stroke-width': 1
         });
-        var bb = s.getBBox();
+        const bb = s.getBBox();
         s.line(0, height, bb.w, height).attr({
             'stroke': xyStroke,
             'stroke-width': 1
@@ -2299,12 +2136,12 @@
                 btn.addClass("btn-danger");
             }
         }
-        var extra = ($("#btnMeasFrame").hasClass("btn-success") ||
+        const extra = ($("#btnMeasFrame").hasClass("btn-success") ||
             $("#btnMeasComp").hasClass("btn-success") ||
             $("#btnMeasFit").hasClass("btn-success") ||
             $("#btnMeasQuick").hasClass("btn-success"));
         $("#btnExtraMeasurements").prop("disabled", !extra);
-        var shadowBikeEnabled = $("#btnShadowBike").hasClass("btn-success");
+        const shadowBikeEnabled = $("#btnShadowBike").hasClass("btn-success");
         $("#btnMeasDelta").prop("disabled", !shadowBikeEnabled);
         $("#btnShadowAnchor").prop("disabled", !shadowBikeEnabled);
 
@@ -2312,13 +2149,13 @@
     }
 
     function makeBikeExportString(b) {
-        var b1 = sortObj(b);
-        var text = JSON.stringify(b1, null, '   ');
+        const b1 = sortObj(b);
+        const text = JSON.stringify(b1, null, '   ');
         return text;
     }
 
     function bikeToUrlString(b) {
-        var b1 = {};
+        const b1 = {};
         b1.a = b.offsetX;
         b1.b = b.offsetY;
         b1.c = b.bottomBracketX;
@@ -2336,8 +2173,6 @@
         b1.o = b.headTubeBottomCenterX;
         b1.p = b.handlebarTopY;
         b1.q = b.handlebarBackX;
-        b1.r = b.hoodsRestTopX;
-        b1.s = b.hoodsRestTopY;
         b1.t = b.handlebarDiameter;
         b1.u = b.stemStack;
         b1.v = b.stemAngle;
@@ -2354,35 +2189,33 @@
         b1.G = b.seatTubeTopToTopTubeCenter;
         b1.H = b.headTubeTopToTopTubeCenter;
 
-        var str = "";
-        var name = encodeURIComponent(b.name).replace(/%20/g, '+');
+        let str = "";
+        const name = encodeURIComponent(b.name).replace(/%20/g, '+');
         str += name.length.toString() + name;
-        for (var key in b1) {
-            var value = b1[key];
-            value = Math.round(value * 100000) / 100000;
+        for (const key in b1) {
+            const value = Math.round(b1[key] * 100000) / 100000;
             str += key + value.toString();
         }
         return str + "Z";
     }
 
     function urlStringToBike(str) {
-        var b1 = {};
-        var i = str.charAt(0) == '#' ? 1 : 0;
-        var nameLen = parseInt(str.substring(i));
+        const b1 = {};
+        let i = str.charAt(0) == '#' ? 1 : 0;
+        const nameLen = parseInt(str.substring(i));
         i += nameLen.toString().length;
-        var name = decodeURIComponent(str.substring(i, i + nameLen).replace(/\+/g, '%20'));
+        const name = decodeURIComponent(str.substring(i, i + nameLen).replace(/\+/g, '%20'));
         i += nameLen;
-        var bad = false;
         while (i < str.length) {
-            var key = str.charAt(i);
+            const key = str.charAt(i);
             if (key == 'Z') {
                 i++;
                 break;
             }
             i++;
-            var match = str.substring(i).match("[a-z,A-Z]");
-            var idx = match == null ? str.length - i : match['index'];
-            var value = parseFloat(str.substring(i, i + idx));
+            const match = str.substring(i).match("[a-z,A-Z]");
+            const idx = match == null ? str.length - i : match['index'];
+            const value = parseFloat(str.substring(i, i + idx));
             if (isNaN(value)) {
                 break;
             }
@@ -2396,7 +2229,7 @@
             };
         }
 
-        var b = {};
+        const b = {};
 
         b.name = name;
         b.offsetX = b1.a;
@@ -2416,8 +2249,6 @@
         b.headTubeBottomCenterX = b1.o;
         b.handlebarTopY = b1.p;
         b.handlebarBackX = b1.q;
-        b.hoodsRestTopX = b1.r;
-        b.hoodsRestTopY = b1.s;
         b.handlebarDiameter = b1.t;
         b.stemStack = b1.u;
         b.stemAngle = b1.v;
@@ -2440,36 +2271,30 @@
     }
 
     function parseBikePair(str) {
-        var bi = urlStringToBike(str);
-        var b1 = bi.bike;
-        var b2 = {};
+        let bi = urlStringToBike(str);
+        let b2 = {};
         if (bi.i < str.length) {
             bi = urlStringToBike(str.substring(bi.i));
             b2 = bi.bike;
         }
-        return [b1, b2];
+        return [bi.bike, b2];
     }
 
     function parseLocationHash() {
         if (glob.lastHashBike != window.location.hash) {
-            var bikes = parseBikePair(window.location.hash);
+            const bikes = parseBikePair(window.location.hash);
             normalizeBikeMeasurements(bikes[0]);
             pushBike(bikes[0]);
         }
     }
 
     function scrollHelp(divName) {
-        var diff = $("#right-column-menu").outerHeight();
-        var pos = $("#" + divName).offset().top;
-        var current = $('#right-column-content').scrollTop();
+        const diff = $("#right-column-menu").outerHeight();
+        const pos = $("#" + divName).offset().top;
+        const current = $('#right-column-content').scrollTop();
         $('#right-column-content').animate({
             scrollTop: current + pos - diff
         });
-    }
-
-    function hideEditBoxes() {
-        $("#editBikeNameInput").hide();
-        $("#editNum").hide();
     }
 
     function registerEventHandlers() {
@@ -2482,13 +2307,13 @@
         });
 
         function windowResize() {
-            var h = window.innerHeight - $("#buttonContainer").outerHeight() - $("#drawingHeader").outerHeight() - $("#drawingFooter").outerHeight();
+            let h = window.innerHeight - $("#buttonContainer").outerHeight() - $("#drawingHeader").outerHeight() - $("#drawingFooter").outerHeight();
             if (h < window.innerHeight / 2) {
                 h = window.innerHeight / 2;
             }
             $("#svgContainer").css('max-height', h);
             $("#bike").css('max-height', h - 2);
-        };
+        }
 
 
         $(window).resize(windowResize);
@@ -2501,7 +2326,7 @@
             $("#editBikeNameInput").focus();
         });
         $("#editBikeNameInput").on('focusout', function() {
-            var text = $("#editBikeNameInput").val();
+            let text = $("#editBikeNameInput").val();
             if (text == "") {
                 text = "Unnamed";
             }
@@ -2535,7 +2360,7 @@
             updateButtons($("#btnMeasDelta"));
         });
         $("#btnExtraMeasurements").on('click', function() {
-            var btn = $("#btnExtraMeasurements");
+            const btn = $("#btnExtraMeasurements");
             if (btn.hasClass("btn-danger")) {
                 btn.removeClass("btn-danger");
                 btn.addClass("btn-success");
@@ -2547,7 +2372,7 @@
         });
 
         $("#btnShadowBike").on('click', function() {
-            var btn = $(this);
+            const btn = $(this);
             if (btn.hasClass("btn-danger")) {
                 btn.removeClass("btn-danger");
                 btn.addClass("btn-success");
@@ -2566,7 +2391,7 @@
 
         if (screenfull.enabled) {
             screenfull.on('change', function() {
-                var btn = $("#btnFullscreen");
+                const btn = $("#btnFullscreen");
                 if (screenfull.isFullscreen) {
                     btn.removeClass("btn-danger");
                     btn.addClass("btn-success");
@@ -2592,7 +2417,7 @@
                 glob.shadowBike = Object.assign({}, glob.bike);
                 glob.shadowBike.name += " #2";
             }
-            var tmp = glob.shadowBike;
+            let tmp = glob.shadowBike;
             glob.shadowBike = glob.bike;
             glob.bike = tmp;
             tmp = glob.shadowUndoHistory;
@@ -2615,8 +2440,8 @@
         });
 
         $("#btnHelp").on('click', function() {
-            var btn = $(this);
-            var objs = [$("#right-column"), $("#right-column-content"), $("#right-column-menu")];
+            const btn = $(this);
+            const objs = [$("#right-column"), $("#right-column-content"), $("#right-column-menu")];
             if (btn.hasClass("btn-danger")) {
                 btn.removeClass("btn-danger");
                 btn.addClass("btn-success");
@@ -2641,7 +2466,7 @@
             if (glob.undoHistory.length > 0) {
                 glob.undoHistory = [glob.undoHistory[glob.undoHistory.length - 1]];
             }
-            var b = {};
+            const b = {};
             normalizeBikeMeasurements(b);
             pushBike(b);
         });
@@ -2674,21 +2499,20 @@
         //	});
 
         $(document).on('change', ':file', function() {
-            var input = $(this);
-            var numFiles = input.get(0).files ? input.get(0).files.length : 1;
-            var label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            const input = $(this);
+            const numFiles = input.get(0).files ? input.get(0).files.length : 1;
+            const label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
             input.trigger('fileselect', [numFiles, label]);
         });
         $(':file').on('fileselect', function(event, numFiles, label) {
-            var input = $(this).parents('.input-group').find(':text');
-            var log = numFiles > 1 ? numFiles + ' files selected' : label;
+            const input = $(this).parents('.input-group').find(':text');
+            const log = numFiles > 1 ? numFiles + ' files selected' : label;
             if (input.length) {
                 input.val(log);
             } else if (log) {
                 loadFileAsText(event.target.files[0], function(fileLoadedEvent) {
-                    var text = fileLoadedEvent.target.result;
+                    const text = fileLoadedEvent.target.result;
                     try {
-                        var b = JSON.parse(text);
                         $("#exportTextArea").val(text);
                         $("#exportModal").modal('hide');
                     } catch (e) {
@@ -2703,21 +2527,21 @@
         });
 
         $("#btnCopy").on('click', function() {
-            var copyText = document.getElementById("exportTextArea");
+            const copyText = document.getElementById("exportTextArea");
             copyText.select();
             document.execCommand("Copy");
             alert("Copied to the clipboard");
             $("#exportModal").modal('hide');
         });
 
-        $('#exportModal').on('show.bs.modal', function(e) {
+        $('#exportModal').on('show.bs.modal', () => {
             $("#exportTextArea").val(makeBikeExportString(glob.bike));
         });
-        $('#exportModal').on('hide.bs.modal', function(e) {
-            var text = $("#exportTextArea").val();
+        $('#exportModal').on('hide.bs.modal', () => {
+            const text = $("#exportTextArea").val();
             if (text != "" && text != makeBikeExportString(glob.bike)) {
                 try {
-                    var b = JSON.parse(text);
+                    const b = JSON.parse(text);
                     normalizeBikeMeasurements(b);
                     pushBike(b);
                 } catch (e) {
@@ -2727,17 +2551,17 @@
             }
         });
 
-        $('#importUrlModal').on('show.bs.modal', function(e) {
+        $('#importUrlModal').on('show.bs.modal', () => {
             $("#importUrlTextArea").val("");
             $("#btnImportMain").text("Import Main Bike");
             $("#btnImportMain").prop("disabled", true);
             $("#btnImportShadow").text("Import Shadow Bike");
             $("#btnImportShadow").prop("disabled", true);
         });
-        $('#importUrlTextArea').on('input', function(e) {
-            var url = $("#importUrlTextArea").val();
+        $('#importUrlTextArea').on('input', () => {
+            let url = $("#importUrlTextArea").val();
             url = url.substring(url.indexOf("#"));
-            var bikes = parseBikePair(url);
+            const bikes = parseBikePair(url);
             if (bikes[0].name !== undefined) {
                 $("#btnImportMain").prop("disabled", false);
                 $("#btnImportMain").text("Import " + bikes[0].name);
@@ -2755,9 +2579,9 @@
         });
 
         function importFromUrl(bike_index) {
-            var url = $("#importUrlTextArea").val();
+            let url = $("#importUrlTextArea").val();
             url = url.substring(url.indexOf("#"));
-            var bikes = parseBikePair(url);
+            const bikes = parseBikePair(url);
             if (bikes[bike_index].name === undefined) {
                 return;
             }
@@ -2769,16 +2593,12 @@
             }, 0);
         }
 
-        $('#btnImportMain').on('click', function(e) {
-            importFromUrl(0);
-        });
-        $('#btnImportShadow').on('click', function(e) {
-            importFromUrl(1);
-        });
+        $('#btnImportMain').on('click', () => importFromUrl(0));
+        $('#btnImportShadow').on('click', () => importFromUrl(1));
     }
 
     function init() {
-        var bikes = parseBikePair(window.location.hash);
+        const bikes = parseBikePair(window.location.hash);
         glob.bike = bikes[0];
         glob.shadowBike = bikes[1];
         normalizeBikeMeasurements(glob.bike);
