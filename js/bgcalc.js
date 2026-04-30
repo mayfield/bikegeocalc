@@ -2490,7 +2490,7 @@
         });
 
         $("#btnSave").on('click', function() {
-            saveTextAsFile("bikecalc.txt", makeBikeExportString(glob.bike));
+            saveTextAsFile(glob.bike.name.replace(/[-\s()\[\]]/g, '_') + '.json', makeBikeExportString(glob.bike));
             $("#exportModal").modal('hide');
         });
 
